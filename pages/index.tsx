@@ -118,9 +118,20 @@ export default function Home() {
     GlobalController.frameCount = capture.frameCount
     const colorMaps = colorMapKeys
 
+    // TODO: Expensive state to handle!
     const [plotCount, setPlotCount] = useState(3)
-    const [colorMap, setColorMap] = useState("viridis")
-    // const theme = useTheme()
+    const [colorMap, setColorMap] = useState("tab10")
+    const [classMask, setClassMask] = useState([] as number[])
+
+    useEffect(() => {
+        GlobalController.setClassMask(classMask)
+    }, [classMask])
+
+    useEffect(() => {
+        const classCount = captures[captureIdx].labels?.length || 0
+        setClassMask(new Array(classCount).fill(1))
+    }, [captureIdx])
+
     return (
         <CssVarsProvider theme={customTheme} disableTransitionOnChange modeStorageKey="mode-toggle-demo">
             <CssBaseline />
@@ -150,9 +161,10 @@ export default function Home() {
                     </Link>
                 </Box>
 
+                <h1 className="text-2xl mr-4 pt-7">Neural Network Visualizer</h1>
 
-                <Box className="w-full flex gap-5 px-5 pt-7 justify-center">
-                    <h1 className="text-2xl mr-5">Neural Network Visualizer</h1>
+                <Box className="w-full flex gap-5 px-5 pt-7 justify-center items-center">
+                    {/* <h1 classNames"text-2xl mr-4">Neural Network Visualizer</h1> */}
                     {/* <span className="content-center">by</span>
                     <Link href="https://overshifted.github.io/">OverShifted</Link> */}
                     <span className="flex gap-2.5">
@@ -161,6 +173,8 @@ export default function Home() {
                             value={captureIdx}
                             onChange={(_e, idx: number | null) => {
                                 setSelectedCaptureIdx(idx as number)
+                                // const classCount = captures[idx as number].labels?.length || 0
+                                // setClassMask(new Array(classCount).fill(1))
                             }}
                         >
                             {captures.map((cap, idx) => (<Option key={idx} value={idx}>{cap.name}</Option>))}
@@ -175,11 +189,11 @@ export default function Home() {
                             // className="grow-1"
                             value={colorMap}
                             placeholder="Color map"
-                            onChange={ (_e: object | null, value: string | null) => {
+                            onChange={(_e: object | null, value: string | null) => {
                                 setColorMap(value as string)
                                 // vis.current?.setColorMap(buildColormap(value as string))
                             }}
-                            >
+                        >
                             {colorMaps.map(v => <Option value={v} key={v}>{v}</Option>)}
                         </Select>
                     </span>
@@ -201,6 +215,7 @@ export default function Home() {
                 <Box className="flex gap-2 justify-center pt-8">
                     {
                         capture.labels?.map((label, index) =>
+
                             <Tooltip key={index} variant="plain" arrow title={
                                 <Image style={{
                                     imageRendering: "pixelated",
@@ -213,37 +228,46 @@ export default function Home() {
                                 '.MuiTooltip-arrow': {
                                     '--joy-palette-background-surface': 'black'
                                 }
-                            })}>
-                                <Chip key={index} size="lg" sx={(theme) => {
-                                    const color = buildColormap(colorMap)[index]
-                                    const bg = theme.palette.mode == "light" ? "rgb(255,255,255)" : "rgb(0,0,0)"
-                                    const fg = theme.palette.mode == "dark" ? "rgb(255,255,255)" : "rgb(0,0,0)"
-                                    const mix = (other: string, factor: number) => mixColors(color, other, factor)
-                                    
-                                    
-                                    return {
-                                        /// Pastel:
-                                        // backgroundColor: mix(bg, 0.5),
-                                        // color: mix(fg, 0.6),
+                            })}
+                                onOpen={() => setClassMask(Array.from({ length: 10 }, (_, i) => i === index ? 1 : 0))}
+                                onClose={() => setClassMask(new Array(classMask.length).fill(1))}
+                            >
+                                <div
+                                // onMouseOver={() => setClassMask(Array.from({ length: 10 }, (_, i) => i === index ? 1 : 0))}
+                                // onMouseOut={() => setClassMask(classMask.fill(1))}
+                                >
+                                    <Chip key={index} size="lg" sx={(theme) => {
+                                        const color = buildColormap(colorMap)[index]
+                                        const bg = theme.palette.mode == "light" ? "rgb(255,255,255)" : "rgb(0,0,0)"
+                                        const fg = theme.palette.mode == "dark" ? "rgb(255,255,255)" : "rgb(0,0,0)"
+                                        const mix = (other: string, factor: number) => mixColors(color, other, factor)
 
-                                        /// Realistic:
-                                        backgroundColor: mix(fg, 0.2),
-                                        color: mix(bg, 0.85),
+                                        return {
+                                            /// Pastel:
+                                            backgroundColor: mix(bg, 0.5),
+                                            color: mix(fg, 0.6),
 
-                                        borderColor: mix(fg, 0.2),
-                                        cursor: "default",
-                                        // filter: "grayscale()"
-                                        // opacity: '60%',
-                                        // textDecoration: 'line-through'
-                                    }
-                                }}>{label}</Chip>
+                                            /// Realistic:
+                                            // backgroundColor: mix(fg, 0.2),
+                                            // color: mix(bg, 0.85),
+
+                                            borderColor: mix(fg, 0.2),
+                                            cursor: "default",
+                                            // filter: classMask[index] ? "" : "grayscale()"
+                                            opacity: classMask[index] ? "100%" : "40%",
+                                            // transition: "all ease 0.15s"
+                                            // opacity: '60%',
+                                            // textDecoration: 'line-through'
+                                        }
+                                    }}>{label}</Chip>
+                                </div>
                             </Tooltip>
                         )
                     }
                 </Box>
 
                 <Box className="pt-4">
-                    <PlaybackControl maxFrame={capture.frameCount}/>
+                    <PlaybackControl maxFrame={capture.frameCount} />
                 </Box>
             </Box>
 
@@ -274,12 +298,12 @@ export default function Home() {
                 <div className="flex flex-row justify-around flex-wrap gap-2">
                     {Array.from({ length: plotCount }).map((_, index) => (
                         <>
-                        <VisScatterBlock key={index} variations={capture.variations} colorMaps={colorMapKeys} colorMap={colorMap} />
-                        {index < plotCount - 1 ? <Divider orientation="vertical" /> : <></>}
+                            <VisScatterBlock key={index} variations={capture.variations} colorMaps={colorMapKeys} colorMap={colorMap} />
+                            {index < plotCount - 1 ? <Divider orientation="vertical" /> : <></>}
                         </>
                     ))}
                 </div>
             </div>
-        </CssVarsProvider>
+        </CssVarsProvider >
     )
 }

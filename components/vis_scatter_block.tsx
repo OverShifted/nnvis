@@ -16,6 +16,7 @@ export default function VisScatterBlock({ variations, colorMaps, colorMap }: Vis
 
     const canvas: RefObject<HTMLCanvasElement | null> = useRef(null)
     const vis: RefObject<Visualization | null> = useRef(null)
+    const prevVariations: RefObject<Variation[] | null> = useRef(null)
 
     const [variation, setVariation] = useState(0)
     const [channel, setChannel] = useState(0)
@@ -45,21 +46,26 @@ export default function VisScatterBlock({ variations, colorMaps, colorMap }: Vis
     }, [])
 
     useEffect(() => {
-        if (variation >= variations.length)
+        if (prevVariations.current === variations) {
+            vis.current?.setVariation(variations[variation])
+        } else {
             setVariation(0)
+            vis.current?.setVariation(variations[0])
+            prevVariations.current = variations
+        }
 
-        vis.current?.setVariation(variations[variation])
+        setChannel(0)
+        vis.current?.setChannel(0)
+    }, [variations, variation])
+
+    useEffect(() => {
         vis.current?.setColorMap(buildColormap(colorMap as string))
         vis.current?.setChannel(channel)
-
-        if (renderStyle)
-            vis.current?.setRenderStyle(renderStyle)
-
+        vis.current?.setRenderStyle(renderStyle)
         vis.current?.setTailFalloff(tailFalloff)
         vis.current?.setRadius(radius)
         vis.current?.setOpacity(opacity)
     }, [
-        variations, variation,
         colorMap, channel, renderStyle,
         tailFalloff, radius, opacity
     ])
@@ -73,7 +79,7 @@ export default function VisScatterBlock({ variations, colorMaps, colorMap }: Vis
                     className="grow-1"
                     value={variation}
                     placeholder="Variation"
-                    onChange={(_, value) => setVariation(value as number)}
+                    onChange={(_, value) => setVariation(value || 0)}
                 >
                     {variations.map((v, index) => <Option value={index} key={index}>{v.name}</Option>)}
                 </Select>
@@ -82,9 +88,9 @@ export default function VisScatterBlock({ variations, colorMaps, colorMap }: Vis
                     className="grow-1"
                     value={channel}
                     placeholder="Channel"
-                    onChange={(_, value) => setChannel(value as number)}
+                    onChange={(_, value) => setChannel(value || 0)}
                 >
-                    {variations[variation].channels.map((v, index) => <Option value={index} key={index}>{v.name}</Option>)}
+                    {variations[variation]?.channels.map((v, index) => <Option value={index} key={index}>{v.name}</Option>)}
                 </Select>
 
                 {/* <Select
@@ -104,7 +110,7 @@ export default function VisScatterBlock({ variations, colorMaps, colorMap }: Vis
                 <ToggleButtonGroup
                     className="grow-1"
                     value={renderStyle}
-                    onChange={(_, value) => setRenderStyle(value as string)}
+                    onChange={(_, value) => setRenderStyle(value || 'dots')}
                     aria-label="Render style"
                     size="sm"
                 >

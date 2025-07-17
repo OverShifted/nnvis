@@ -1,3 +1,4 @@
+import GlobalController from "./global_controller"
 import { NDArray } from "./numpy_loader"
 import Variation from "./variation"
 
@@ -22,10 +23,10 @@ export default class Renderer {
         this.correctScaling()
     }
 
-    setArray(array: NDArray[], variation: Variation) {
-        this.array = array
-        this.variation = variation
-    }
+    // setArray(array: NDArray[], variation: Variation) {
+    //     this.array = array
+    //     this.variation = variation
+    // }
 
     render(frame: number, channel_id: number, radius: number, colormap: string[], tailMode: boolean, taTailMode: boolean, tailFalloff: number, isPlaying: boolean, _fraction: number) {
         if (!(tailMode && frame != 0))
@@ -49,8 +50,12 @@ export default class Renderer {
                 const y = remap(array.at(frame, i, 1) as number, yBounds, [0, 1])
 
                 const colorid = this.array[this.array.length - 1].data[i] as number
-        
-                this._drawCircle(x, y, radius, colormap[colorid])
+                const mask = GlobalController.classMask[colorid]
+
+                if (mask === undefined || mask > 0.5)
+                    this._drawCircle(x, y, radius, colormap[colorid])
+                else
+                    this._drawCircle(x, y, radius, colormap[colorid].replace(/(,\s*\d*%)?\)/g, `,${1000 / array.shape[1]}%)`))
             }
         else
             for (let i = 0; i < array.shape[1]; i++) {

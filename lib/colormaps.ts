@@ -10,8 +10,6 @@ const data: Map<string, {
     colors: [number, number, number][]
 }> = new Map(Object.entries(dataRaw))
 
-console.log(data)
-
 function evaluateCMap(x: number, name: string, reverse: boolean = false): [number, number, number] {
     /**
      * Evaluate colormap `name` at some value `x`.

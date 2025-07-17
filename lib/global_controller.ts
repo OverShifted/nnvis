@@ -11,6 +11,8 @@ class _GlobalController {
     isPlaying: boolean = true
     reactSetIsPlaying: ((isPlaying: boolean) => void) | null = null
 
+    classMask: number[] = []
+
     constructor() {
         this.items = new Map()
     }
@@ -46,6 +48,11 @@ class _GlobalController {
     setIsPlaying(isPlaying: boolean) {
         this.isPlaying = isPlaying
         this.reactSetIsPlaying?.(isPlaying)
+    }
+
+    setClassMask(classMask: number[]) {
+        this.classMask = classMask
+        this.items.forEach(item => item.draw())
     }
 
     correctScaling() {

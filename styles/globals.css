@@ -29,5 +29,6 @@ canvas {
   height: 512px; */
   margin: 0 8px;
   max-width: 512px;
+  min-width: 500px;
   width: calc(100% - 16px);
 }
