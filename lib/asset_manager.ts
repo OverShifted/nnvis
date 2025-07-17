@@ -1,14 +1,15 @@
 import { NumpyLoader, NDArray } from "./numpy_loader"
+import Variation from "./variation"
 
 // Currently only handles numpy arrays
 // TODO: Cleanup
 const AssetManager = (() => {
     class Pending {
         xhr: XMLHttpRequest
-        wishlist: object[]
+        wishlist: { resolve: object, reject: object }[]
         progressbars: object[]
 
-        constructor(xhr: XMLHttpRequest, wishlist: object[], progressbars: object[]) {
+        constructor(xhr: XMLHttpRequest, wishlist: { resolve: object, reject: object }[], progressbars: object[]) {
             this.xhr = xhr
             this.wishlist = wishlist
             this.progressbars = progressbars
@@ -24,8 +25,11 @@ const AssetManager = (() => {
             this.pending = new Map()
         }
 
+        // TODO: Use an actual type
         /* eslint @typescript-eslint/no-unused-vars: 0 */
-        get(url: string, _progressbar: object | null = null): Promise<NDArray[]> {
+        get(variation: Variation, onLongLoadRequired: () => void, _progressbar: object | null = null): Promise<NDArray[]> {
+            const url = variation.path
+
             return new Promise((resolve, reject) => {
                 if (this.assets.has(url)) {
                     resolve(this.assets.get(url) as NDArray[])
@@ -34,6 +38,8 @@ const AssetManager = (() => {
                     return
                 }
 
+                onLongLoadRequired()
+                
                 if (this.pending.has(url)) {
                     const pending = this.pending.get(url)
                     pending?.wishlist.push({ resolve, reject })
@@ -69,7 +75,7 @@ const AssetManager = (() => {
 
                 const succeed = (() => {
                     const buf = xhr.response // not responseText
-                    const ndarray = NumpyLoader.fromArrayBuffer(buf)
+                    const ndarray = NumpyLoader.fromArrayBuffer(buf, variation)
                     this.assets.set(url, ndarray)
 
                     // TODO: make sure this works

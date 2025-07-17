@@ -2,11 +2,13 @@ import AssetManager from "./asset_manager"
 import GlobalController from "./global_controller"
 import { NDArray } from "./numpy_loader"
 import Renderer from "./renderer"
+import Variation from "./variation"
 
 export default class Visualization {
-    array: NDArray[] | null
+    // Pending or loaded
+    variation: Variation | null = null
     canvas: HTMLCanvasElement
-    renderer: Renderer | null
+    renderer: Renderer | null = null
     
     reactSetIsLoading: (isLoading: boolean) => void
 
@@ -16,6 +18,7 @@ export default class Visualization {
     tailFalloff: number
     radius: number
     opacity: number
+    fraction: number
 
     colorMapWithTransparency: string[]
 
@@ -25,10 +28,9 @@ export default class Visualization {
         renderStyle: string,
         tailFalloff: number,
         radius: number,
-        opacity: number
+        opacity: number,
+        fraction: number
     }) {
-        this.array = null
-        this.renderer = null
         this.canvas = canvas
         
         this.reactSetIsLoading = reactSetIsLoading
@@ -39,25 +41,27 @@ export default class Visualization {
         this.tailFalloff = options.tailFalloff
         this.radius = options.radius
         this.opacity = options.opacity
+        this.fraction = options.fraction
 
         this.colorMapWithTransparency = []
         this.buildColorMapWithTransparency()
     }
     
-    setArray(array: NDArray[]) {
-        this.array = array
-        this.renderer = new Renderer(array, this.canvas)
+    _setArray(array: NDArray[], variation: Variation) {
+        this.renderer = new Renderer(array, variation, this.canvas)
         this.draw()
     }
 
-    setSmoothing(smoothing: string) {
-        this.reactSetIsLoading(true)
+    // TODO: Use an actual type
+    setVariation(variation: Variation) {
         this.renderer?.clear()
         this.renderer = null
 
         // TODO: Ignore resolvation of old promises
-        AssetManager.get(smoothing).then(ndas => {
-            this.setArray(ndas)
+        AssetManager.get(variation, () => {
+            this.reactSetIsLoading(true)
+        }).then(ndas => {
+            this._setArray(ndas, variation)
         }).finally(() => {
             this.reactSetIsLoading(false)
         })
@@ -95,6 +99,11 @@ export default class Visualization {
         this.draw()
     }
 
+    setFraction(fraction: number) {
+        this.fraction = fraction
+        this.draw()
+    }
+
     buildColorMapWithTransparency() {
         this.colorMapWithTransparency = this.colorMap.map(color => color.replace("rgb", "rgba").replace(")", `,${this.opacity}%)`))
     }
@@ -105,6 +114,6 @@ export default class Visualization {
             this.colorMapWithTransparency,
             this.renderStyle.endsWith("tail"),
             this.renderStyle == "lines-tail",
-            this.tailFalloff, GlobalController.isPlaying)
+            this.tailFalloff, GlobalController.isPlaying, this.fraction)
     }
 }

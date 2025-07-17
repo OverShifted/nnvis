@@ -17,19 +17,24 @@ export default function PlaybackControl({maxFrame}: PlaybackControlProps) {
     GlobalController.reactSetIsPlaying = setIsPlaying
 
     return (
-        <div id="playback-control" className="pb-5 mb-5">
+        <div id="playback-control">
             <Button id="play-button" onClick={() => GlobalController.setIsPlaying(!isPlaying)}>
                 <span>{ isPlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon /> }</span>
             </Button>
             <div style={{width: '100%', position: 'relative'}}>
-                <Slider aria-label="Frame" value={time} onChange={
+                <Slider aria-label="Frame" value={time + 1} onChange={
                     e => {
                         GlobalController.setIsPlaying(false)
-                        GlobalController.setTime(parseInt((e.target as HTMLInputElement).value))
+                        GlobalController.setTime(parseInt((e.target as HTMLInputElement).value) - 1)
                     }
-                } max={maxFrame} />
+                } min={1} max={maxFrame} sx={{
+                    '--Slider-railBackground': '#c7c7c7',  // unfilled part (optional)
+                    '&:hover': {
+                        '--Slider-railBackground': '#999', // darker on hover
+                    },
+                }} />
 
-                <span className="absolute -bottom-0.5 left-0.5"><span>{time}</span><span className="text-gray-500"> / {maxFrame}</span></span>
+                <span className="absolute -bottom-0.5 left-0.5"><span>{time + 1}</span><span className="text-gray-500"> / {maxFrame}</span></span>
             </div>
         </div>
     )

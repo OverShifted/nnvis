@@ -6,6 +6,8 @@ class _GlobalController {
     time: number = 0
     reactSetTime: ((time: number) => void) | null = null
 
+    frameCount: number = 0
+
     isPlaying: boolean = true
     reactSetIsPlaying: ((isPlaying: boolean) => void) | null = null
 
@@ -26,9 +28,9 @@ class _GlobalController {
     }
 
     tick() {
-        if (this.isPlaying) {
+        if (this.isPlaying && this.frameCount) {
             this.items.forEach(item => item.draw())
-            this.setTime((this.time + 1) % 364)
+            this.setTime((this.time + 1) % this.frameCount)
         }
     }
 
@@ -57,24 +59,24 @@ class _GlobalController {
 const GlobalController = new _GlobalController()
 export default GlobalController
 
-let then = Date.now()
-const fpses: number[] = []
+// let then = Date.now()
+// const fpses: number[] = []
 
 function tick() {
-    const now = Date.now()
-    const deltaTime = now - then
-    const fps = 1000/deltaTime
+    // const now = Date.now()
+    // const deltaTime = now - then
+    // const fps = 1000/deltaTime
 
-    if (fpses.length < 100)
-        fpses.push(fps)
-    else {
-        console.log(fpses.reduce((a, b) => a + b) / fpses.length)
-        fpses.length = 0
-    }
+    // if (fpses.length < 100)
+    //     fpses.push(fps)
+    // else {
+    //     console.log(fpses.reduce((a, b) => a + b) / fpses.length)
+    //     fpses.length = 0
+    // }
 
     GlobalController.tick()
 
-    then = now
+    // then = now
     requestAnimationFrame(tick)
 }
 
