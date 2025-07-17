@@ -129,7 +129,7 @@ export default function Home() {
                 <title>NNVis</title>
             </Head>
 
-            <Box className="w-full px-15 pt-10 pb-3 mb-10 text-center" sx={(theme) => ({
+            <Box className="w-full px-15 pt-0 pb-3 mb-10 text-center" sx={(theme) => ({
                 // backgroundColor: theme.vars.palette.primary[200],
                 // color: theme.vars.palette.primary[900]
 
@@ -140,19 +140,21 @@ export default function Home() {
                     <ThemeToggleButton />
                 </Box>
 
-                {/* <Box className="absolute top-8 left-5 flex items-center gap-2">
+                <Box className="absolute top-8 left-8 flex items-center gap-2">
                     by
-                    <div className="w-5 h-5" style={{
-                        backgroundColor: 'rgb(74, 153, 255)'
-                    }} />
+                    <Link href="https://overshifted.github.io/">
+                        <div className="w-5 h-5 mr-2" style={{
+                            backgroundColor: 'rgb(74, 153, 255)'
+                        }} />
+                        OverShifted
+                    </Link>
+                </Box>
 
-                    by <Link href="https://overshifted.github.io/">OverShifted</Link>
-                </Box> */}
 
-                <h1 className="text-3xl">Neural Network Visualizer</h1>
-                by <Link href="https://overshifted.github.io/">OverShifted</Link>
-
-                <Box className="w-full flex gap-5 px-5 pt-10 justify-center">
+                <Box className="w-full flex gap-5 px-5 pt-7 justify-center">
+                    <h1 className="text-2xl mr-5">Neural Network Visualizer</h1>
+                    {/* <span className="content-center">by</span>
+                    <Link href="https://overshifted.github.io/">OverShifted</Link> */}
                     <span className="flex gap-2.5">
                         <FormLabel>Capture</FormLabel>
                         <Select
@@ -201,24 +203,40 @@ export default function Home() {
                         capture.labels?.map((label, index) =>
                             <Tooltip key={index} variant="plain" arrow title={
                                 <Image style={{
-                                    imageRendering: "pixelated"
+                                    imageRendering: "pixelated",
+                                    // filter: 'invert()'
                                 }} width={150} height={100} src={`/images/fasion-mnist-${index}.png`} alt="" />
-                            } sx={{
+                            } sx={(theme) => ({
                                 background: 'black',
                                 padding: 4,
+                                filter: theme.palette.mode === 'dark' ? 'invert()' : '',
                                 '.MuiTooltip-arrow': {
                                     '--joy-palette-background-surface': 'black'
                                 }
-                            }}>
-                                <Chip key={index} size="lg" sx={(theme) => ({
-                                    backgroundColor: mixColors(buildColormap(colorMap)[index], theme.palette.mode == "dark" ? "rgb(255,255,255)" : "rgb(0,0,0)", 0.2),
-                                    color: mixColors(buildColormap(colorMap)[index], theme.palette.mode == "light" ? "rgb(255,255,255)" : "rgb(0,0,0)", 0.85),
-                                    borderColor: mixColors(buildColormap(colorMap)[index], theme.palette.mode == "dark" ? "rgb(255,255,255)" : "rgb(0,0,0)", 0.2),
-                                    cursor: "default",
-                                    // filter: "grayscale()"
-                                    // opacity: '60%',
-                                    // textDecoration: 'line-through'
-                                })}>{label}</Chip>
+                            })}>
+                                <Chip key={index} size="lg" sx={(theme) => {
+                                    const color = buildColormap(colorMap)[index]
+                                    const bg = theme.palette.mode == "light" ? "rgb(255,255,255)" : "rgb(0,0,0)"
+                                    const fg = theme.palette.mode == "dark" ? "rgb(255,255,255)" : "rgb(0,0,0)"
+                                    const mix = (other: string, factor: number) => mixColors(color, other, factor)
+                                    
+                                    
+                                    return {
+                                        /// Pastel:
+                                        // backgroundColor: mix(bg, 0.5),
+                                        // color: mix(fg, 0.6),
+
+                                        /// Realistic:
+                                        backgroundColor: mix(fg, 0.2),
+                                        color: mix(bg, 0.85),
+
+                                        borderColor: mix(fg, 0.2),
+                                        cursor: "default",
+                                        // filter: "grayscale()"
+                                        // opacity: '60%',
+                                        // textDecoration: 'line-through'
+                                    }
+                                }}>{label}</Chip>
                             </Tooltip>
                         )
                     }

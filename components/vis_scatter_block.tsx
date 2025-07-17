@@ -59,7 +59,7 @@ export default function VisScatterBlock({variations, colorMaps, colorMap}: VisSc
 
     return (
         <div className="vis-container mb-10 max-w-full">
-            <div className="flex items-center justify-evenly px-2 gap-2">
+            <div className="flex items-stretch justify-evenly px-2 gap-2">
                 <Select
                     className="grow-1"
                     value={variation}
@@ -95,9 +95,9 @@ export default function VisScatterBlock({variations, colorMaps, colorMap}: VisSc
                     >
                     {colorMaps.map(v => <Option value={v} key={v}>{v}</Option>)}
                 </Select> */}
-            </div>
+            {/* </div>
 
-            <div className="flex items-center justify-evenly mt-2 px-2">
+            <div className="flex items-center justify-evenly mt-2 px-2"> */}
                 <ToggleButtonGroup
                     className="grow-1"
                     value={renderStyle}
@@ -112,19 +112,22 @@ export default function VisScatterBlock({variations, colorMaps, colorMap}: VisSc
                     size="sm"
                     >
                     <Button className="grow-1" value="dots">Dots</Button>
-                    <Button className="grow-1" value="dots-tail">Budget-mode Tail</Button>
-                    <Button className="grow-1" value="lines-tail">Totally Accurate Tail Simulation</Button>
+                    <Button className="grow-1" value="dots-tail">Tails</Button>
+                    {/* <Button className="grow-1" value="dots-tail">Budget-mode Tail</Button> */}
+                    {/* <Button className="grow-1" value="lines-tail">Totally Accurate Tail Simulation</Button> */}
                 </ToggleButtonGroup>
 
             </div>
 
+            { renderStyle === "dots-tail" ?
             <div className="flex items-center justify-evenly -mt-1 -mb-3 pl-2.5 pr-4">
                 <label className="min-w-35">Tail Falloff</label>
                 <Slider aria-label="Tail falloff" value={tailFalloff} onChange={(_e: object | null, value: number | number[]) => {
                     setTailFalloff(value as number)
                     vis.current?.setTailFalloff(value as number)
                 }} max={100} size="sm" />
-            </div>
+            </div> : <></>
+            }
 
             <div className="flex items-center justify-evenly -mb-3 pl-2.5 pr-4">
                 <label className="min-w-35">Radius</label>
@@ -142,15 +145,15 @@ export default function VisScatterBlock({variations, colorMaps, colorMap}: VisSc
                 }} min={0} max={100} size="sm" />
             </div>
 
-            <div className="flex items-center justify-evenly mb-0 pl-2.5 pr-4">
+            {/* <div className="flex items-center justify-evenly mb-0 pl-2.5 pr-4">
                 <label className="min-w-35">Fraction</label>
                 <Slider aria-label="Fraction" value={fraction} onChange={(_e: object, value: number | number[]) => {
                     setFraction(value as number)
                     vis.current?.setFraction(value as number)
                 }} min={0} max={2000} size="sm" />
-            </div>
+            </div> */}
 
-            <div className="relative">
+            <div className="relative mt-3">
                 { isLoading ? <div className="absolute" style={{top: "calc(50% - 20px)", left: "calc(50% - 20px)"}}><CircularProgress /></div> : null}
                 <canvas ref={canvas} id="canvas" width="1024px" height="1024px"></canvas>
             </div>
