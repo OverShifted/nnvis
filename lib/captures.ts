@@ -1,8 +1,9 @@
-import Capture from "./capture"
+import Capture from './capture'
 
+// prettier-ignore
 const captures: Capture[] = [
 	{
-		name: "Fasion MNIST",
+		name: 'Fasion MNIST',
 		frameCount: 1850,
 		variations: [
 			{
@@ -38,7 +39,7 @@ const captures: Capture[] = [
 			'Ankle boot']
 	},
 	{
-		name: "Deep MNIST",
+		name: 'Deep MNIST',
 		frameCount: 363,
 		variations: [
 			{

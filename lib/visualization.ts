@@ -1,119 +1,132 @@
-import AssetManager from "./asset_manager"
-import GlobalController from "./global_controller"
-import { NDArray } from "./numpy_loader"
-import Renderer from "./renderer"
-import Variation from "./variation"
+import AssetManager from './asset_manager'
+import GlobalController from './global_controller'
+import { NDArray } from './numpy_loader'
+import Renderer from './renderer'
+import Variation from './variation'
 
 export default class Visualization {
-    // Pending or loaded
-    variation: Variation | null = null
-    canvas: HTMLCanvasElement
-    renderer: Renderer | null = null
-    
-    reactSetIsLoading: (isLoading: boolean) => void
+  // Pending or loaded
+  variation: Variation | null = null
+  canvas: HTMLCanvasElement
+  renderer: Renderer | null = null
 
-    channel: number
-    colorMap: string[]
-    renderStyle: string
-    tailFalloff: number
-    radius: number
-    opacity: number
-    fraction: number
+  reactSetIsLoading: (isLoading: boolean) => void
 
-    colorMapWithTransparency: string[]
+  channel: number
+  colorMap: string[]
+  renderStyle: string
+  tailFalloff: number
+  radius: number
+  opacity: number
+  fraction: number
 
-    constructor(canvas: HTMLCanvasElement, reactSetIsLoading: (isLoading: boolean) => void, options: {
-        channel: number,
-        colorMap: string[],
-        renderStyle: string,
-        tailFalloff: number,
-        radius: number,
-        opacity: number,
-        fraction: number
-    }) {
-        this.canvas = canvas
-        
-        this.reactSetIsLoading = reactSetIsLoading
+  colorMapWithTransparency: string[]
 
-        this.channel = options.channel
-        this.colorMap = options.colorMap
-        this.renderStyle = options.renderStyle
-        this.tailFalloff = options.tailFalloff
-        this.radius = options.radius
-        this.opacity = options.opacity
-        this.fraction = options.fraction
+  constructor(
+    canvas: HTMLCanvasElement,
+    reactSetIsLoading: (isLoading: boolean) => void,
+    options: {
+      channel: number
+      colorMap: string[]
+      renderStyle: string
+      tailFalloff: number
+      radius: number
+      opacity: number
+      fraction: number
+    },
+  ) {
+    this.canvas = canvas
 
-        this.colorMapWithTransparency = []
-        this.buildColorMapWithTransparency()
-    }
-    
-    _setArray(array: NDArray[], variation: Variation) {
-        this.renderer = new Renderer(array, variation, this.canvas)
-        this.draw()
-    }
+    this.reactSetIsLoading = reactSetIsLoading
 
-    // TODO: Use an actual type
-    setVariation(variation: Variation) {
-        this.renderer?.clear()
-        this.renderer = null
+    this.channel = options.channel
+    this.colorMap = options.colorMap
+    this.renderStyle = options.renderStyle
+    this.tailFalloff = options.tailFalloff
+    this.radius = options.radius
+    this.opacity = options.opacity
+    this.fraction = options.fraction
 
-        // TODO: Ignore resolvation of old promises
-        AssetManager.get(variation, () => {
-            this.reactSetIsLoading(true)
-        }).then(ndas => {
-            this._setArray(ndas, variation)
-        }).finally(() => {
-            this.reactSetIsLoading(false)
-        })
-    }
+    this.colorMapWithTransparency = []
+    this.buildColorMapWithTransparency()
+  }
 
-    setChannel(channel: number) {
-        this.channel = channel
-        this.draw()
-    }
+  _setArray(array: NDArray[], variation: Variation) {
+    this.renderer = new Renderer(array, variation, this.canvas)
+    this.draw()
+  }
 
-    setColorMap(colorMap: string[]) {
-        this.colorMap = colorMap
-        this.buildColorMapWithTransparency()
-        this.draw()
-    }
+  // TODO: Use an actual type
+  setVariation(variation: Variation) {
+    this.renderer?.clear()
+    this.renderer = null
 
-    setRenderStyle(renderStyle: string) {
-        this.renderStyle = renderStyle
-        this.draw()
-    }
+    // TODO: Ignore resolvation of old promises
+    AssetManager.get(variation, () => {
+      this.reactSetIsLoading(true)
+    })
+      .then((ndas) => {
+        this._setArray(ndas, variation)
+      })
+      .finally(() => {
+        this.reactSetIsLoading(false)
+      })
+  }
 
-    setTailFalloff(tailFalloff: number) {
-        this.tailFalloff = tailFalloff
-        this.draw()
-    }
+  setChannel(channel: number) {
+    this.channel = channel
+    this.draw()
+  }
 
-    setRadius(radius: number) {
-        this.radius = radius
-        this.draw()
-    }
+  setColorMap(colorMap: string[]) {
+    this.colorMap = colorMap
+    this.buildColorMapWithTransparency()
+    this.draw()
+  }
 
-    setOpacity(opacity: number) {
-        this.opacity = opacity
-        this.buildColorMapWithTransparency()
-        this.draw()
-    }
+  setRenderStyle(renderStyle: string) {
+    this.renderStyle = renderStyle
+    this.draw()
+  }
 
-    setFraction(fraction: number) {
-        this.fraction = fraction
-        this.draw()
-    }
+  setTailFalloff(tailFalloff: number) {
+    this.tailFalloff = tailFalloff
+    this.draw()
+  }
 
-    buildColorMapWithTransparency() {
-        this.colorMapWithTransparency = this.colorMap.map(color => color.replace("rgb", "rgba").replace(")", `,${this.opacity}%)`))
-    }
+  setRadius(radius: number) {
+    this.radius = radius
+    this.draw()
+  }
 
-    draw(time: number = GlobalController.time) {
-        this.renderer?.render(
-            time, this.channel, this.radius,
-            this.colorMapWithTransparency,
-            this.renderStyle.endsWith("tail"),
-            this.renderStyle == "lines-tail",
-            this.tailFalloff, GlobalController.isPlaying, this.fraction)
-    }
+  setOpacity(opacity: number) {
+    this.opacity = opacity
+    this.buildColorMapWithTransparency()
+    this.draw()
+  }
+
+  setFraction(fraction: number) {
+    this.fraction = fraction
+    this.draw()
+  }
+
+  buildColorMapWithTransparency() {
+    this.colorMapWithTransparency = this.colorMap.map((color) =>
+      color.replace('rgb', 'rgba').replace(')', `,${this.opacity}%)`),
+    )
+  }
+
+  draw(time: number = GlobalController.time) {
+    this.renderer?.render(
+      time,
+      this.channel,
+      this.radius,
+      this.colorMapWithTransparency,
+      this.renderStyle.endsWith('tail'),
+      this.renderStyle == 'lines-tail',
+      this.tailFalloff,
+      GlobalController.isPlaying,
+      this.fraction,
+    )
+  }
 }
