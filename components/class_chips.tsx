@@ -90,6 +90,19 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
           }}
         >
           {label.name}
+          {label.image ? (
+            <Image
+              style={{
+                display: 'none',
+              }}
+              width={0}
+              height={0}
+              src={label.image}
+              alt=""
+            />
+          ) : (
+            <></>
+          )}
         </Chip>
       </div>
     </Tooltip>
