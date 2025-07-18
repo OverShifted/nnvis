@@ -1,3 +1,4 @@
+import Capture from '@/lib/capture'
 import { buildColormap } from '@/lib/colormaps'
 import GlobalController from '@/lib/global_controller'
 import { mixColors } from '@/lib/utils'
@@ -6,12 +7,13 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 interface ClassChipsProps {
-  labels: string[]
+  capture: Capture
   colorMap: string
 }
 
-export default function ClassChips({ labels, colorMap }: ClassChipsProps) {
+export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
   const [classMask, setClassMask] = useState([] as number[])
+  const labels = capture.labels || []
 
   useEffect(() => {
     GlobalController.setClassMask(classMask)
@@ -19,7 +21,7 @@ export default function ClassChips({ labels, colorMap }: ClassChipsProps) {
 
   useEffect(() => {
     setClassMask(new Array(labels.length).fill(1))
-  }, [labels])
+  }, [capture, labels.length])
 
   return labels.map((label, index) => (
     <Tooltip
@@ -27,16 +29,20 @@ export default function ClassChips({ labels, colorMap }: ClassChipsProps) {
       variant="plain"
       arrow
       title={
-        <Image
-          style={{
-            imageRendering: 'pixelated',
-            // filter: 'invert()'
-          }}
-          width={150}
-          height={100}
-          src={`/images/fasion-mnist-${index}.png`}
-          alt=""
-        />
+        label.image ? (
+          <Image
+            style={{
+              imageRendering: 'pixelated',
+              // filter: 'invert()'
+            }}
+            width={150}
+            height={100}
+            src={label.image}
+            alt=""
+          />
+        ) : (
+          <></>
+        )
       }
       sx={(theme) => ({
         background: 'black',
@@ -45,6 +51,7 @@ export default function ClassChips({ labels, colorMap }: ClassChipsProps) {
         '.MuiTooltip-arrow': {
           '--joy-palette-background-surface': 'black',
         },
+        opacity: label.image ? 100 : 0,
       })}
       onOpen={() =>
         setClassMask(
@@ -90,7 +97,7 @@ export default function ClassChips({ labels, colorMap }: ClassChipsProps) {
             }
           }}
         >
-          {label}
+          {label.name}
         </Chip>
       </div>
     </Tooltip>

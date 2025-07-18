@@ -5,5 +5,5 @@ export default interface Capture {
   frameCount: number
 
   variations: Variation[]
-  labels?: string[]
+  labels?: { name: string; image?: string }[]
 }

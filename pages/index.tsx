@@ -249,7 +249,7 @@ export default function Home() {
         </Box>
 
         <Box className="flex gap-2 justify-center pt-8">
-          <ClassChips labels={capture.labels || []} colorMap={colorMap} />
+          <ClassChips capture={capture} colorMap={colorMap} />
         </Box>
 
         <Box className="pt-4">

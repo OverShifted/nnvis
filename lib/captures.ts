@@ -27,16 +27,18 @@ const captures: Capture[] = [
 				]
 			},
 		],
-		labels: ['T-shirt/top',
-			'Trouser',
-			'Pullover',
-			'Dress',
-			'Coat',
-			'Sandal',
-			'Shirt',
-			'Sneaker',
-			'Bag',
-			'Ankle boot']
+		labels: [
+      { name: 'T-shirt/top', image: '/images/fashion-mnist/0.png' },
+			{ name: 'Trouser',     image: '/images/fashion-mnist/1.png' },
+			{ name: 'Pullover',    image: '/images/fashion-mnist/2.png' },
+			{ name: 'Dress',       image: '/images/fashion-mnist/3.png' },
+			{ name: 'Coat',        image: '/images/fashion-mnist/4.png' },
+			{ name: 'Sandal',      image: '/images/fashion-mnist/5.png' },
+			{ name: 'Shirt',       image: '/images/fashion-mnist/6.png' },
+			{ name: 'Sneaker',     image: '/images/fashion-mnist/7.png' },
+			{ name: 'Bag',         image: '/images/fashion-mnist/8.png' },
+			{ name: 'Ankle boot',  image: '/images/fashion-mnist/9.png' },
+    ]
 	},
 	{
 		name: 'Deep MNIST',
@@ -143,7 +145,18 @@ const captures: Capture[] = [
 				]
 			}
 		],
-		labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => x.toString())
+		labels: [
+      { name: '0', image: '/images/mnist/0.png' },
+      { name: '1', image: '/images/mnist/1.png' },
+      { name: '2', image: '/images/mnist/2.png' },
+      { name: '3', image: '/images/mnist/3.png' },
+      { name: '4', image: '/images/mnist/4.png' },
+      { name: '5', image: '/images/mnist/5.png' },
+      { name: '6', image: '/images/mnist/6.png' },
+      { name: '7', image: '/images/mnist/7.png' },
+      { name: '8', image: '/images/mnist/8.png' },
+      { name: '9', image: '/images/mnist/9.png' },
+    ]
 	}
 ]
 
