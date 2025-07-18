@@ -33,7 +33,6 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
           <Image
             style={{
               imageRendering: 'pixelated',
-              // filter: 'invert()'
             }}
             width={150}
             height={100}
@@ -60,10 +59,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
       }
       onClose={() => setClassMask(new Array(classMask.length).fill(1))}
     >
-      <div
-      // onMouseOver={() => setClassMask(Array.from({ length: 10 }, (_, i) => i === index ? 1 : 0))}
-      // onMouseOut={() => setClassMask(classMask.fill(1))}
-      >
+      <div className="px-1">
         <Chip
           key={index}
           size="lg"
@@ -89,11 +85,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
 
               borderColor: mix(fg, 0.2),
               cursor: 'default',
-              // filter: classMask[index] ? "" : "grayscale()"
               opacity: classMask[index] ? '100%' : '40%',
-              // transition: "all ease 0.15s"
-              // opacity: '60%',
-              // textDecoration: 'line-through'
             }
           }}
         >

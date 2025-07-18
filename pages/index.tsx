@@ -248,7 +248,7 @@ export default function Home() {
           </span>
         </Box>
 
-        <Box className="flex gap-2 justify-center pt-8">
+        <Box className="flex justify-center pt-8">
           <ClassChips capture={capture} colorMap={colorMap} />
         </Box>
 
