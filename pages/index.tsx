@@ -36,60 +36,6 @@ const customTheme = extendTheme({
   },
 })
 
-/*
-function ModeToggle() {
-  const { mode, setMode } = useColorScheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
-
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-      <Typography>Light</Typography>
-      <Switch
-        checked={mode === 'dark'}
-        onChange={(event) => {
-          setMode(event.target.checked ? 'dark' : 'light')
-        }}
-      />
-      <Typography>Dark</Typography>
-    </Box>
-  )
-}
-
-function ModeSwitcher() {
-    const { mode, setMode } = useColorScheme()
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    if (!mounted) {
-        return null
-    }
-    return (
-        <Select
-            // variant="soft"
-            value={mode}
-            onChange={(_event, newMode) => {
-                setMode(newMode)
-            }}
-        >
-            <Option value="system">System</Option>
-            <Option value="light">Light</Option>
-            <Option value="dark">Dark</Option>
-        </Select>
-    )
-}
-*/
-
 const ThemeToggleButton = () => {
   const { mode, setMode } = useColorScheme()
 
@@ -192,17 +138,12 @@ export default function Home() {
         <h1 className="text-2xl mr-4 pt-7">Neural Network Visualizer</h1>
 
         <Box className="w-full flex gap-5 px-5 pt-7 justify-center items-center">
-          {/* <h1 classNames"text-2xl mr-4">Neural Network Visualizer</h1> */}
-          {/* <span className="content-center">by</span>
-                    <Link href="https://overshifted.github.io/">OverShifted</Link> */}
           <span className="flex gap-2.5">
             <FormLabel>Capture</FormLabel>
             <Select
               value={captureIdx}
               onChange={(_e, idx: number | null) => {
                 setSelectedCaptureIdx(idx as number)
-                // const classCount = captures[idx as number].labels?.length || 0
-                // setClassMask(new Array(classCount).fill(1))
               }}
             >
               {captures.map((cap, idx) => (
@@ -257,37 +198,13 @@ export default function Home() {
         </Box>
       </Box>
 
-      {/* <div className="absolute left-1 top-1.5 w-90 flex gap-2"> */}
-      {/* <div className="left-1 top-1.5 w-90 flex gap-2 px-5"> */}
-      {/* <div className="w-90 flex gap-2 px-5 pt-5">
-                <Select
-                    value={captureIdx}
-                    onChange={(_e, idx: number | null) => {
-                        setSelectedCaptureIdx(idx as number)
-                    }}
-                >
-                    {captures.map((cap, idx) => (<Option key={idx} value={idx}>{cap.name}</Option>))}
-                </Select>
-
-                <Input
-                    type="number"
-                    value={plotCount}
-                    onChange={(e) => setPlotCount(parseInt(e.target.value))}
-                    sx={{ width: 80, textAlign: 'center' }}
-                    slotProps={{ input: { min: 0 } }}
-                />
-            </div> */}
-
       <div className={`px-4 pb-8 ${geistMono.className}`}>
-        {/* <PlaybackControl maxFrame={capture.frameCount}/> */}
-
         <div className="flex flex-row justify-around flex-wrap gap-2">
           {Array.from({ length: plotCount }).map((_, index) => (
             <>
               <VisScatterBlock
                 key={index}
                 variations={capture.variations}
-                colorMaps={colorMapKeys}
                 colorMap={colorMap}
               />
               {index < plotCount - 1 ? (

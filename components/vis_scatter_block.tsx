@@ -14,13 +14,11 @@ import { RefObject, useEffect, useId, useRef, useState } from 'react'
 
 interface VisScatterBlockProps {
   variations: Variation[]
-  colorMaps: string[]
   colorMap: string
 }
 
 export default function VisScatterBlock({
   variations,
-  colorMaps,
   colorMap,
 }: VisScatterBlockProps) {
   const componentId = useId()
@@ -113,20 +111,6 @@ export default function VisScatterBlock({
           ))}
         </Select>
 
-        {/* <Select
-                    className="grow-1"
-                    value={colorMap}
-                    placeholder="Color map"
-                    onChange={ (_e: object | null, value: string | null) => {
-                        setColorMap(value as string)
-                        vis.current?.setColorMap(buildColormap(value as string))
-                    }}
-                    >
-                    {colorMaps.map(v => <Option value={v} key={v}>{v}</Option>)}
-                </Select> */}
-        {/* </div>
-
-            <div className="flex items-center justify-evenly mt-2 px-2"> */}
         <ToggleButtonGroup
           className="grow-1"
           value={renderStyle}
@@ -137,7 +121,7 @@ export default function VisScatterBlock({
           <Button className="grow-1" value="dots">
             Dots
           </Button>
-          <Button className="grow-1" value="dots-tail">
+          <Button className="grow-1" value="lines-tail">
             Tails
           </Button>
           {/* <Button className="grow-1" value="dots-tail">Budget-mode Tail</Button> */}
