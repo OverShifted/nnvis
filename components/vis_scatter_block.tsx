@@ -140,9 +140,7 @@ export default function VisScatterBlock({
             size="sm"
           />
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
 
       <div className="flex items-center justify-evenly -mb-3 pl-2.5 pr-4">
         <label className="min-w-35">Radius</label>

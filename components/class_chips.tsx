@@ -25,6 +25,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
 
   return labels.map((label, index) => (
     <Tooltip
+      className="classChipTooltip"
       key={index}
       variant="plain"
       arrow
@@ -34,24 +35,28 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
             style={{
               imageRendering: 'pixelated',
             }}
-            width={150}
-            height={100}
+            width={120}
+            height={120}
             src={label.image}
             alt=""
           />
-        ) : (
-          <></>
-        )
+        ) : null
       }
-      sx={(theme) => ({
-        background: 'black',
-        padding: 4,
-        filter: theme.palette.mode === 'dark' ? 'invert()' : '',
-        '.MuiTooltip-arrow': {
-          '--joy-palette-background-surface': 'black',
+      slotProps={{
+        root: {
+          sx: (theme) => ({
+            backgroundColor: 'black',
+            padding: 4,
+            filter: theme.palette.mode === 'dark' ? 'invert()' : '',
+            opacity: label.image ? 100 : 0,
+          }),
         },
-        opacity: label.image ? 100 : 0,
-      })}
+        arrow: {
+          sx: {
+            '--joy-palette-background-surface': 'black',
+          },
+        },
+      }}
       onOpen={() =>
         setClassMask(
           Array.from({ length: 10 }, (_, i) => (i === index ? 1 : 0)),
@@ -66,11 +71,9 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
           sx={(theme) => {
             const color = buildColormap(colorMap)[index]
             const light = theme.palette.mode == 'light'
-            const white = 'rgb(255,255,255)'
-            const black = 'rgb(0,0,0)'
 
-            const bg = light ? white : black
-            const fg = light ? black : white
+            const bg = light ? 'white' : 'black'
+            const fg = light ? 'black' : 'white'
             const mix = (other: string, factor: number) =>
               mixColors(color, other, factor)
 
@@ -100,9 +103,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
               src={label.image}
               alt=""
             />
-          ) : (
-            <></>
-          )}
+          ) : null}
         </Chip>
       </div>
     </Tooltip>

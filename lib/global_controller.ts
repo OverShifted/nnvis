@@ -32,11 +32,12 @@ class _GlobalController {
   tick() {
     if (this.isPlaying && this.frameCount) {
       this.items.forEach((item) => item.draw())
-      this.setTime((this.time + 1) % this.frameCount)
+      this.setTime(this.time + 1)
     }
   }
 
   setTime(time: number) {
+    time %= this.frameCount
     this.time = time
     this.reactSetTime?.(time)
 

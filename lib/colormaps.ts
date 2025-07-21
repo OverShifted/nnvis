@@ -19256,7 +19256,7 @@ const data: Map<
   }
 > = new Map(Object.entries(dataRaw))
 
-function evaluateCMap(
+function evaluateColorMap(
   x: number,
   name: string,
   reverse: boolean = false,
@@ -19319,7 +19319,7 @@ function buildColormap(name: string) {
   const colormap = []
 
   for (let i = 0; i < 10; i++) {
-    const [r, g, b] = evaluateCMap(i / 9, name)
+    const [r, g, b] = evaluateColorMap(i / 9, name)
     colormap.push(`rgb(${r},${g},${b})`)
   }
 
@@ -19330,5 +19330,21 @@ const colorMapData = data
 const colorMapKeys = colorMapData
   .keys()
   .filter((key) => (colorMapData.get(key)?.colors.length || 0) >= 10)
+  .filter((key) => {
+    const colors = colorMapData.get(key)?.colors
+
+    if (['tab20', 'tab20b', 'tab20c'].includes(key)) return false
+
+    if (!colors) return false
+
+    for (const color of colors) {
+      const [r, g, b] = color
+      const avg = (r + g + b) / 3
+
+      if (avg < 0.15 || 0.88 < avg) return false
+    }
+
+    return true
+  })
   .toArray()
-export { buildColormap, colorMapData, colorMapKeys }
+export { buildColormap, colorMapData, colorMapKeys, evaluateColorMap }
