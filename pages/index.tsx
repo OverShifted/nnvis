@@ -199,7 +199,7 @@ export default function Home() {
           setColorMap={setColorMap}
         />
 
-        <Box className="flex justify-center pt-8">
+        <Box className="flex flex-wrap justify-center pt-8">
           <ClassChips capture={capture} colorMap={colorMap} />
         </Box>
 

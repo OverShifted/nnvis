@@ -64,7 +64,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
       }
       onClose={() => setClassMask(new Array(classMask.length).fill(1))}
     >
-      <div className="px-1">
+      <div className="p-1">
         <Chip
           key={index}
           size="lg"
