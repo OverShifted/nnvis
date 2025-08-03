@@ -32,16 +32,8 @@ export default function VisScatterBlock({
   const [variation, setVariation] = useState(0)
   const [channel, setChannel] = useState(0)
   // const [colorMap, setColorMap] = useState(colorMaps[0])
-  const [isLoading, _setIsLoading] = useState(true)
-
-  const setIsLoading = (v: boolean) =>{
-    _setIsLoading(v)
-    setShownLoadPercentage(0)
-    // setLoadPercentage(0) also gets called by AssetManager
-  }
-
+  const [isLoading, setIsLoading] = useState(true)
   const [loadPercentage, setLoadPercentage] = useState(0)
-  const [shownLoadPercentage, setShownLoadPercentage] = useState(0)
 
   const [renderStyle, setRenderStyle] = useState('dots')
   const [tailFalloff, setTailFalloff] = useState(10)
@@ -72,22 +64,6 @@ export default function VisScatterBlock({
 
     return () => GlobalController.unRegister(componentId)
   }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShownLoadPercentage((prev) => {
-        if (!isLoading || loadPercentage <= prev)
-          return prev
-
-        const delta = loadPercentage - prev
-        const increase = Math.max(1, delta / 3)
-
-        return Math.trunc(prev + increase)
-      })
-    }, 100)
-
-    return () => clearInterval(interval)
-  }, [isLoading, loadPercentage])
 
   const router = useRouter()
   useEffect(() => {
@@ -215,8 +191,8 @@ export default function VisScatterBlock({
             className="absolute"
             style={{ top: 'calc(50% - 20px)', left: 'calc(50% - 20px)' }}
           >
-            <CircularProgress value={shownLoadPercentage as number} size="lg">
-              <Typography>{shownLoadPercentage}%</Typography>
+            <CircularProgress value={loadPercentage} size="lg">
+              <Typography>{Math.trunc(loadPercentage)}%</Typography>
             </CircularProgress>
           </div>
         ) : null}
