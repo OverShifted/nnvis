@@ -191,8 +191,10 @@ export default function VisScatterBlock({
             className="absolute"
             style={{ top: 'calc(50% - 20px)', left: 'calc(50% - 20px)' }}
           >
-            <CircularProgress value={loadPercentage} size="lg">
-              <Typography>{Math.trunc(loadPercentage)}%</Typography>
+            <CircularProgress value={isNaN(loadPercentage) ? undefined : loadPercentage} size="lg">
+              <Typography>
+                {isNaN(loadPercentage) ? '' : `${Math.trunc(loadPercentage)}%`}
+              </Typography>
             </CircularProgress>
           </div>
         ) : null}

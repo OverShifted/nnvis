@@ -103,7 +103,7 @@ class _AssetManager {
       xhr.addEventListener('timeout', fail)
 
       xhr.addEventListener('progress', (e) => {
-        const percentage = (e.loaded * 100) / e.total
+        const percentage = e.lengthComputable ? (e.loaded * 100) / e.total : NaN
         console.log(`Loaded ${percentage.toFixed(1)}% of ${url} (${e.loaded}/${e.total})`)
         pending.onProgress(percentage)
       })
