@@ -104,7 +104,7 @@ class _AssetManager {
 
       xhr.addEventListener('progress', (e) => {
         const percentage = (e.loaded * 100) / e.total
-        console.log(`Loaded ${percentage.toFixed(1)}% of ${url}`)
+        console.log(`Loaded ${percentage.toFixed(1)}% of ${url} (${e.loaded}/${e.total})`)
         pending.onProgress(percentage)
       })
 
