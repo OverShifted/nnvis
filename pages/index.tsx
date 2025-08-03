@@ -19,6 +19,7 @@ import captures from '@/lib/captures'
 import Head from 'next/head'
 import ClassChips from '@/components/class_chips'
 import Options from '@/components/options'
+import { useRouter } from 'next/router'
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
@@ -123,6 +124,8 @@ export default function Home() {
     }
   }, [])
 
+  const router = useRouter()
+
   return (
     <CssVarsProvider
       theme={customTheme}
@@ -133,6 +136,7 @@ export default function Home() {
 
       <Head>
         <title>NNVis</title>
+        <link rel="icon" href={router.basePath + "/favicon.ico"} />
       </Head>
 
       <Box
