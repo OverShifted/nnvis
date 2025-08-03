@@ -89,7 +89,7 @@ export default function Home() {
     setClassMask(new Array(classCount).fill(1))
 
     GlobalController.capture = capture
-  }, [captureIdx])
+  }, [captureIdx, capture])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

@@ -46,6 +46,7 @@ export default function VisScatterBlock({
   const [tailFalloff, setTailFalloff] = useState(10)
   const [radius, setRadius] = useState(3.5)
   const [opacity, setOpacity] = useState(100)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [fraction, setFraction] = useState(2000)
 
   /* eslint react-hooks/exhaustive-deps: 0 */

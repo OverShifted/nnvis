@@ -42,7 +42,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
           />
         ) : null
       }
-      // @ts-ignore
+      // @ts-expect-error For some reason the type schema of slotProps does not allow this but it is mentioned in the documentation and just works ;)
       slotProps={
         {
           root: {

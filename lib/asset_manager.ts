@@ -4,6 +4,7 @@ import Variation from './variation'
 type Wish = {
   makerId: string
   resolve: (value: NDArray[] | PromiseLike<NDArray[]>) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reject: (reason?: any) => void
   onProgress: (percentage: number) => void
 }
@@ -27,6 +28,7 @@ class Pending {
     this.wishlist.forEach(w => w.resolve(value))
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onReject(reason?: any) {
     this.wishlist.forEach(w => w.reject(reason))
   }
@@ -101,7 +103,7 @@ class _AssetManager {
 
       xhr.addEventListener('progress', (e) => {
         const percentage = (e.loaded * 100) / e.total
-        console.log(`Loaded ${percentage.toFixed(1)}% of ${url}`);
+        console.log(`Loaded ${percentage.toFixed(1)}% of ${url}`)
         pending.onProgress(percentage)
       })
 
