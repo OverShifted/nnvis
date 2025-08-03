@@ -7,8 +7,6 @@ class _GlobalController {
   time: number = 0
   reactSetTime: ((time: number) => void) | null = null
 
-  frameCount: number = 0
-  // TODO: Remove frameCount
   capture: Capture | null = null
 
   isPlaying: boolean = true
@@ -30,6 +28,10 @@ class _GlobalController {
 
   get(id: string): Visualization | undefined {
     return this.items.get(id)
+  }
+
+  get frameCount() {
+    return this.capture?.frameCount || 0
   }
 
   tick() {

@@ -1,150 +1,130 @@
 import { NumpyLoader, NDArray } from './numpy_loader'
 import Variation from './variation'
 
-// Currently only handles numpy arrays
-// TODO: Cleanup
-const AssetManager = (() => {
-  class Pending {
-    xhr: XMLHttpRequest
-    wishlist: { resolve: object; reject: object }[]
-    progressbars: object[]
+type Wish = {
+  makerId: string
+  resolve: (value: NDArray[] | PromiseLike<NDArray[]>) => void
+  reject: (reason?: any) => void
+  onProgress: (percentage: number) => void
+}
 
-    constructor(
-      xhr: XMLHttpRequest,
-      wishlist: { resolve: object; reject: object }[],
-      progressbars: object[],
-    ) {
-      this.xhr = xhr
-      this.wishlist = wishlist
-      this.progressbars = progressbars
-    }
+class Pending {
+  xhr: XMLHttpRequest
+  wishlist: Wish[]
+  progress: number = 0
+
+  constructor(xhr: XMLHttpRequest, wishlist: Wish[]) {
+    this.xhr = xhr
+    this.wishlist = wishlist
   }
 
-  class _AssetManager {
-    assets: Map<string, NDArray[]>
-    pending: Map<string, Pending>
+  onProgress(progress: number) {
+    this.progress = progress
+    this.wishlist.forEach((w) => w.onProgress(progress))
+  }
 
-    constructor() {
-      this.assets = new Map()
-      this.pending = new Map()
-    }
+  onResolve(value: NDArray[] | PromiseLike<NDArray[]>) {
+    this.wishlist.forEach(w => w.resolve(value))
+  }
 
-    // TODO: Use an actual type
-    /* eslint @typescript-eslint/no-unused-vars: 0 */
-    get(
-      variation: Variation,
-      onLongLoadRequired: () => void,
-      _progressbar: object | null = null,
-    ): Promise<NDArray[]> {
-      const url = variation.path
+  onReject(reason?: any) {
+    this.wishlist.forEach(w => w.reject(reason))
+  }
 
-      return new Promise((resolve, reject) => {
-        if (this.assets.has(url)) {
-          resolve(this.assets.get(url) as NDArray[])
-          // if (progressbar)
-          //     this.attach_progressbar(url, progressbar)
-          return
-        }
+  addWish(wish: Wish) {
+    this.wishlist.push(wish)
+    wish.onProgress(this.progress)
+  }
+}
 
-        onLongLoadRequired()
+// A utility class for downloading and caching NumPy arrays.
+class _AssetManager {
+  assets: Map<string, NDArray[]>
+  pending: Map<string, Pending>
 
-        if (this.pending.has(url)) {
-          const pending = this.pending.get(url)
-          pending?.wishlist.push({ resolve, reject })
-          // if (progressbar)
-          //     this.attach_progressbar(url, progressbar)
-          return
-        }
+  constructor() {
+    this.assets = new Map()
+    this.pending = new Map()
+  }
 
-        const xhr = new XMLHttpRequest()
-        const pending = {
-          xhr,
-          wishlist: [{ resolve, reject }],
-          progressbars: [],
-        }
-        this.pending.set(url, pending)
+  /* eslint @typescript-eslint/no-unused-vars: 0 */
+  get(
+    requesterId: string,
+    variation: Variation,
+    onLongLoadRequired: () => void,
+    onProgress: (percentage: number) => void,
+  ): Promise<NDArray[]> {
+    this.revokePendingRequests(requesterId)
+    const url = variation.path
 
-        // console.log(this.pending)
+    return new Promise((resolve, reject) => {
+      if (this.assets.has(url)) {
+        resolve(this.assets.get(url)!)
+        return
+      }
 
-        // if (progressbar)
-        //     this.attach_progressbar(url, progressbar)
+      onLongLoadRequired()
+      const thisWish = { makerId: requesterId, resolve, reject, onProgress }
 
-        const fail = ((e: object) => {
-          pending.wishlist.forEach((wish) => wish.reject(e))
-          // pending.progressbars.forEach(progressbar_fail)
+      if (this.pending.has(url)) {
+        this.pending.get(url)!.addWish(thisWish)
+        return
+      }
 
-          setTimeout(
-            () =>
-              alert('Could not load data. See console for more information.'),
-            400,
-          )
-          console.log(e)
+      const xhr = new XMLHttpRequest()
+      const pending = new Pending(xhr, [])
+      this.pending.set(url, pending)
+      pending.addWish(thisWish)
 
-          this.pending.delete(url)
-        }).bind(this)
+      const fail = ((e: object) => {
+        pending.onReject(e)
+        console.log(e)
+        this.pending.delete(url)
 
-        const succeed = (() => {
-          const buf = xhr.response // not responseText
-          const ndarray = NumpyLoader.fromArrayBuffer(buf, variation)
-          this.assets.set(url, ndarray)
+        setTimeout(
+          () =>
+            alert('Could not load data. See console for more information.'),
+          400,
+        )
+      }).bind(this)
 
-          // TODO: make sure this works
-          pending.wishlist.forEach((wish) => wish.resolve(ndarray))
-          // pending.progressbars.forEach(progressbar_success)
-        }).bind(this)
+      const succeed = (() => {
+        const buf = xhr.response
+        const ndArrays = NumpyLoader.fromArrayBuffer(buf, variation)
+        this.assets.set(url, ndArrays)
+        pending.onResolve(ndArrays)
+      }).bind(this)
 
-        xhr.addEventListener('load', (e) => {
-          if (e.loaded < e.total) fail(e)
-          else succeed()
-        })
+      xhr.addEventListener('load', succeed)
+      xhr.addEventListener('error', fail)
+      xhr.addEventListener('timeout', fail)
 
-        xhr.addEventListener('error', fail)
-
-        xhr.addEventListener('progress', (e) => {
-          const percentage = (e.loaded * 100) / e.total
-          console.log(percentage)
-
-          // pending.progressbars.forEach(progressbar => progressbar.ldBar.set(percentage))
-        })
-
-        // xhr.addEventListener('loadstart', () => {
-        //     // pending.progressbars.forEach(progressbar => {
-        //     //     progressbar.classList.remove('done')
-        //     //     progressbar.classList.remove('success')
-        //     //     progressbar.classList.remove('failure')
-        //     //     progressbar.ldBar.set(0, false)
-        //     // })
-        // })
-
-        // xhr.addEventListener('loadend', e => {
-        //     // pending.progressbars.forEach(progressbar => progressbar.classList.add('done'))
-        // })
-
-        xhr.open('GET', url, true)
-        xhr.responseType = 'arraybuffer'
-
-        xhr.send(null)
+      xhr.addEventListener('progress', (e) => {
+        const percentage = (e.loaded * 100) / e.total
+        console.log(`Loaded ${percentage.toFixed(1)}% of ${url}`);
+        pending.onProgress(percentage)
       })
-    }
 
-    // attach_progressbar(_url: string, _progressbar: object) {
-    // if (this.assets.has(url)) {
-    //     progressbar_success(progressbar)
-    // } else if (this.pending.has(url)) {
-    //     // TODO: update progress right here
-    //     progressbar_running(progressbar)
-    //     this.pending.forEach(p =>
-    //         p.progressbars = p.progressbars.filter(
-    //             item => item != progressbar
-    //         )
-    //     )
-
-    //     this.pending.get(url).progressbars.push(progressbar)
-    // }
-    // }
+      xhr.open('GET', url, true)
+      xhr.responseType = 'arraybuffer'
+      xhr.send(null)
+    })
   }
 
-  return new _AssetManager()
-})()
+  revokePendingRequests(requesterId: string) {
+    this.pending.forEach(pending => {
+      pending.wishlist = pending.wishlist.filter(wish => wish.makerId != requesterId)
 
+      if (pending.wishlist.length === 0)
+        pending.xhr.abort()
+    })
+
+    for (const [url, pending] of this.pending) {
+      if (pending.wishlist.length === 0)
+        this.pending.delete(url)
+    }
+  }
+}
+
+const AssetManager = new _AssetManager()
 export default AssetManager

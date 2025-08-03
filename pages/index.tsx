@@ -88,9 +88,8 @@ export default function Home() {
     const classCount = captures[captureIdx].classes?.length || 0
     setClassMask(new Array(classCount).fill(1))
 
-    GlobalController.frameCount = capture.frameCount
     GlobalController.capture = capture
-  }, [captureIdx, capture.frameCount])
+  }, [captureIdx])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

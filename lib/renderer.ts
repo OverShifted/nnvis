@@ -13,7 +13,8 @@ function remap(
 }
 
 export default class Renderer {
-  // TODO:
+  // Holds the currently chosen variation data which is asynchronously
+  // loaded by AssetManager
   array: NDArray[]
   variation: Variation
   canvas: HTMLCanvasElement

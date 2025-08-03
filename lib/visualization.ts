@@ -5,12 +5,15 @@ import Renderer from './renderer'
 import Variation from './variation'
 
 export default class Visualization {
+  id: string
+
   // Pending or loaded
   variation: Variation | null = null
   canvas: HTMLCanvasElement
   renderer: Renderer | null = null
 
   reactSetIsLoading: (isLoading: boolean) => void
+  reactSetLoadPercentage: (percentage: number) => void
 
   channel: number
   colorMap: string[]
@@ -23,8 +26,10 @@ export default class Visualization {
   colorMapWithTransparency: string[]
 
   constructor(
+    id: string,
     canvas: HTMLCanvasElement,
     reactSetIsLoading: (isLoading: boolean) => void,
+    reactSetLoadPercentage: (percentage: number) => void,
     options: {
       channel: number
       colorMap: string[]
@@ -35,9 +40,11 @@ export default class Visualization {
       fraction: number
     },
   ) {
+    this.id = id
     this.canvas = canvas
 
     this.reactSetIsLoading = reactSetIsLoading
+    this.reactSetLoadPercentage = reactSetLoadPercentage
 
     this.channel = options.channel
     this.colorMap = options.colorMap
@@ -56,17 +63,22 @@ export default class Visualization {
     this.draw()
   }
 
-  // TODO: Use an actual type
   setVariation(variation: Variation) {
     this.renderer?.clear()
     this.renderer = null
 
-    // TODO: Ignore resolvation of old promises
-    AssetManager.get(variation, () => {
-      this.reactSetIsLoading(true)
-    })
-      .then((ndas) => {
-        this._setArray(ndas, variation)
+    AssetManager.get(
+      this.id,
+      variation,
+      () => {
+        this.reactSetIsLoading(true)
+      },
+      (percentage) => {
+        this.reactSetLoadPercentage(percentage)
+      },
+    )
+      .then((ndArrays) => {
+        this._setArray(ndArrays, variation)
       })
       .finally(() => {
         this.reactSetIsLoading(false)

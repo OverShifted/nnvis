@@ -9,6 +9,7 @@ import {
   Select,
   Slider,
   ToggleButtonGroup,
+  Typography,
 } from '@mui/joy'
 import { RefObject, useEffect, useId, useRef, useState } from 'react'
 
@@ -30,7 +31,17 @@ export default function VisScatterBlock({
   const [variation, setVariation] = useState(0)
   const [channel, setChannel] = useState(0)
   // const [colorMap, setColorMap] = useState(colorMaps[0])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, _setIsLoading] = useState(true)
+
+  const setIsLoading = (v: boolean) =>{
+    _setIsLoading(v)
+    setShownLoadPercentage(0)
+    // setLoadPercentage(0) also gets called by AssetManager
+  }
+
+  const [loadPercentage, setLoadPercentage] = useState(0)
+  const [shownLoadPercentage, setShownLoadPercentage] = useState(0)
+
   const [renderStyle, setRenderStyle] = useState('dots')
   const [tailFalloff, setTailFalloff] = useState(10)
   const [radius, setRadius] = useState(3.5)
@@ -40,8 +51,10 @@ export default function VisScatterBlock({
   /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
     vis.current = new Visualization(
+      componentId,
       canvas.current as HTMLCanvasElement,
       setIsLoading,
+      setLoadPercentage,
       {
         channel,
         colorMap: buildColormap(colorMap),
@@ -57,6 +70,22 @@ export default function VisScatterBlock({
 
     return () => GlobalController.unRegister(componentId)
   }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShownLoadPercentage((prev) => {
+        if (!isLoading || loadPercentage <= prev)
+          return prev
+
+        const delta = loadPercentage - prev
+        const increase = Math.max(1, delta / 3)
+
+        return Math.trunc(prev + increase)
+      })
+    }, 100)
+
+    return () => clearInterval(interval)
+  }, [isLoading, loadPercentage])
 
   useEffect(() => {
     if (prevVariations.current === variations) {
@@ -183,7 +212,9 @@ export default function VisScatterBlock({
             className="absolute"
             style={{ top: 'calc(50% - 20px)', left: 'calc(50% - 20px)' }}
           >
-            <CircularProgress />
+            <CircularProgress value={shownLoadPercentage as number} size="lg">
+              <Typography>{shownLoadPercentage}%</Typography>
+            </CircularProgress>
           </div>
         ) : null}
         <canvas
