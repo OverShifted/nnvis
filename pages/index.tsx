@@ -6,7 +6,6 @@ import {
   Box,
   CssBaseline,
   CssVarsProvider,
-  Divider,
   extendTheme,
   IconButton,
   Link,
@@ -216,9 +215,9 @@ export default function Home() {
                 variations={capture.variations}
                 colorMap={colorMap}
               />
-              {index < plotCount - 1 ? (
+              {/* {index < plotCount - 1 ? (
                 <Divider orientation="vertical" />
-              ) : null}
+              ) : null} */}
             </React.Fragment>
           ))}
         </div>
