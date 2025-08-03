@@ -1,7 +1,7 @@
 export default interface Variation {
   name: string
   path: string
-  deltaEncoding: boolean
+  deltaEncoded: boolean
 
   // 'standard' means to use numpy hints
   // { eBits: number } means to read as f8

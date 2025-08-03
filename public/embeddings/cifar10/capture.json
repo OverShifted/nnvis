@@ -1,0 +1,128 @@
+{
+  "name": "CIFAR10",
+  "frameCount": 1176,
+  "variations": [
+    {
+      "name": "bw0.08-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -3.1707031249999993,
+              17.862109375
+            ],
+            [
+              -12.5265625,
+              20.0421875
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.01-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -2.1270996093749996,
+              15.892236328125
+            ],
+            [
+              -11.4125,
+              19.6
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.005-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -1.714111328125,
+              14.618896484375
+            ],
+            [
+              -11.253124999999999,
+              19.534374999999997
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.001-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              7.85234375,
+              14.49921875
+            ],
+            [
+              1.9767578124999998,
+              15.2634765625
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "classes": [
+    [
+      "airplane",
+      "class-0.png"
+    ],
+    [
+      "automobile",
+      "class-1.png"
+    ],
+    [
+      "bird",
+      "class-2.png"
+    ],
+    [
+      "cat",
+      "class-3.png"
+    ],
+    [
+      "deer",
+      "class-4.png"
+    ],
+    [
+      "dog",
+      "class-5.png"
+    ],
+    [
+      "frog",
+      "class-6.png"
+    ],
+    [
+      "horse",
+      "class-7.png"
+    ],
+    [
+      "ship",
+      "class-8.png"
+    ],
+    [
+      "truck",
+      "class-9.png"
+    ]
+  ]
+}

@@ -1,0 +1,574 @@
+[
+  {
+    "name": "Cat vs Dog",
+    "frameCount": 880,
+    "classes": [
+      {
+        "name": "cat",
+        "image": "/embeddings/cat-vs-dogs/class-0.png"
+      },
+      {
+        "name": "dog",
+        "image": "/embeddings/cat-vs-dogs/class-1.png"
+      }
+    ],
+    "variations": [
+      {
+        "name": "bw0.08-f16",
+        "path": "/embeddings/cat-vs-dogs/data-0.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-19.748437499999998, 27.670312499999998],
+              [-15.814843749999998, 28.932031249999998]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.01-f16",
+        "path": "/embeddings/cat-vs-dogs/data-1.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-11.764062499999998, 22.342187499999998],
+              [-16.04453125, 27.52109375]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.005-f16",
+        "path": "/embeddings/cat-vs-dogs/data-2.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-8.76640625, 21.33671875],
+              [-15.798437499999999, 27.5328125]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.001-f16",
+        "path": "/embeddings/cat-vs-dogs/data-3.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-15.44140625, 22.76171875],
+              [-19.41484375, 23.15703125]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Fashion MNIST",
+    "frameCount": 1407,
+    "classes": [
+      {
+        "name": "T-shirt/top",
+        "image": "/embeddings/fashion-mnist/class-0.png"
+      },
+      {
+        "name": "Trouser",
+        "image": "/embeddings/fashion-mnist/class-1.png"
+      },
+      {
+        "name": "Pullover",
+        "image": "/embeddings/fashion-mnist/class-2.png"
+      },
+      {
+        "name": "Dress",
+        "image": "/embeddings/fashion-mnist/class-3.png"
+      },
+      {
+        "name": "Coat",
+        "image": "/embeddings/fashion-mnist/class-4.png"
+      },
+      {
+        "name": "Sandal",
+        "image": "/embeddings/fashion-mnist/class-5.png"
+      },
+      {
+        "name": "Shirt",
+        "image": "/embeddings/fashion-mnist/class-6.png"
+      },
+      {
+        "name": "Sneaker",
+        "image": "/embeddings/fashion-mnist/class-7.png"
+      },
+      {
+        "name": "Bag",
+        "image": "/embeddings/fashion-mnist/class-8.png"
+      },
+      {
+        "name": "Ankle boot",
+        "image": "/embeddings/fashion-mnist/class-9.png"
+      }
+    ],
+    "variations": [
+      {
+        "name": "bw0.08-f16",
+        "path": "/embeddings/fashion-mnist/data-0.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-5.816601562499999, 25.193554687499997],
+              [-10.928906249999999, 19.811718749999997]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [-10.223046874999998, 22.406640624999998],
+              [-10.067578125, 22.290234375]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.01-f16",
+        "path": "/embeddings/fashion-mnist/data-1.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-5.441210937499999, 24.9548828125],
+              [-10.872656249999999, 19.75546875]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [-10.105859374999998, 22.242578124999998],
+              [-10.004296874999998, 22.250390624999998]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.005-f16",
+        "path": "/embeddings/fashion-mnist/data-2.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-5.523046874999999, 24.894140625],
+              [-10.80078125, 19.71484375]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [-9.993359375, 22.130078125],
+              [-9.936328125, 22.158984375]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.001-f16",
+        "path": "/embeddings/fashion-mnist/data-3.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-1.0335937499999996, 18.96328125],
+              [-6.69296875, 14.09140625]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [-4.289453125, 15.262109375],
+              [-6.014843749999999, 15.913281249999999]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Flowers 5",
+    "frameCount": 1192,
+    "classes": [
+      {
+        "name": "daisy",
+        "image": "/embeddings/flowers-5/class-0.png"
+      },
+      {
+        "name": "dandelion",
+        "image": "/embeddings/flowers-5/class-1.png"
+      },
+      {
+        "name": "rose",
+        "image": "/embeddings/flowers-5/class-2.png"
+      },
+      {
+        "name": "sunflower",
+        "image": "/embeddings/flowers-5/class-3.png"
+      },
+      {
+        "name": "tulip",
+        "image": "/embeddings/flowers-5/class-4.png"
+      }
+    ],
+    "variations": [
+      {
+        "name": "bw0.08-f16",
+        "path": "/embeddings/flowers-5/data-0.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-14.53984375, 24.09453125],
+              [-11.62109375, 26.11328125]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.01-f16",
+        "path": "/embeddings/flowers-5/data-1.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-11.658593749999998, 20.900781249999998],
+              [-11.986718749999998, 24.510156249999998]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.005-f16",
+        "path": "/embeddings/flowers-5/data-2.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-11.934375, 20.653125],
+              [-11.982812499999998, 24.373437499999998]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.001-f16",
+        "path": "/embeddings/flowers-5/data-3.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-3.01484375, 12.63203125],
+              [-13.3470703125, 3.9427734374999996]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "CIFAR10",
+    "frameCount": 1176,
+    "classes": [
+      {
+        "name": "airplane",
+        "image": "/embeddings/cifar10/class-0.png"
+      },
+      {
+        "name": "automobile",
+        "image": "/embeddings/cifar10/class-1.png"
+      },
+      {
+        "name": "bird",
+        "image": "/embeddings/cifar10/class-2.png"
+      },
+      {
+        "name": "cat",
+        "image": "/embeddings/cifar10/class-3.png"
+      },
+      {
+        "name": "deer",
+        "image": "/embeddings/cifar10/class-4.png"
+      },
+      {
+        "name": "dog",
+        "image": "/embeddings/cifar10/class-5.png"
+      },
+      {
+        "name": "frog",
+        "image": "/embeddings/cifar10/class-6.png"
+      },
+      {
+        "name": "horse",
+        "image": "/embeddings/cifar10/class-7.png"
+      },
+      {
+        "name": "ship",
+        "image": "/embeddings/cifar10/class-8.png"
+      },
+      {
+        "name": "truck",
+        "image": "/embeddings/cifar10/class-9.png"
+      }
+    ],
+    "variations": [
+      {
+        "name": "bw0.08-f16",
+        "path": "/embeddings/cifar10/data-0.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-3.1707031249999993, 17.862109375],
+              [-12.5265625, 20.0421875]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.01-f16",
+        "path": "/embeddings/cifar10/data-1.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-2.1270996093749996, 15.892236328125],
+              [-11.4125, 19.6]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.005-f16",
+        "path": "/embeddings/cifar10/data-2.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [-1.714111328125, 14.618896484375],
+              [-11.253124999999999, 19.534374999999997]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.001-f16",
+        "path": "/embeddings/cifar10/data-3.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "final",
+            "bounds": [
+              [7.85234375, 14.49921875],
+              [1.9767578124999998, 15.2634765625]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "MNIST",
+    "frameCount": 1407,
+    "classes": [
+      {
+        "name": "0 - zero",
+        "image": "/embeddings/mnist/class-0.png"
+      },
+      {
+        "name": "1 - one",
+        "image": "/embeddings/mnist/class-1.png"
+      },
+      {
+        "name": "2 - two",
+        "image": "/embeddings/mnist/class-2.png"
+      },
+      {
+        "name": "3 - three",
+        "image": "/embeddings/mnist/class-3.png"
+      },
+      {
+        "name": "4 - four",
+        "image": "/embeddings/mnist/class-4.png"
+      },
+      {
+        "name": "5 - five",
+        "image": "/embeddings/mnist/class-5.png"
+      },
+      {
+        "name": "6 - six",
+        "image": "/embeddings/mnist/class-6.png"
+      },
+      {
+        "name": "7 - seven",
+        "image": "/embeddings/mnist/class-7.png"
+      },
+      {
+        "name": "8 - eight",
+        "image": "/embeddings/mnist/class-8.png"
+      },
+      {
+        "name": "9 - nine",
+        "image": "/embeddings/mnist/class-9.png"
+      }
+    ],
+    "variations": [
+      {
+        "name": "bw0.08-f16",
+        "path": "/embeddings/mnist/data-0.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-7.890625, 26.984375],
+              [-9.2, 25.6375]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [-6.645312499999999, 22.8484375],
+              [-9.078125, 22.421875]
+            ]
+          },
+          {
+            "name": "final",
+            "bounds": [
+              [-11.40625, 17.28125],
+              [-9.275390625, 20.513671875]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.01-f16",
+        "path": "/embeddings/mnist/data-1.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-7.608203124999999, 25.987109375],
+              [-6.758203125, 24.887109375]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [-6.4017578125, 22.9115234375],
+              [-8.96953125, 22.25859375]
+            ]
+          },
+          {
+            "name": "final",
+            "bounds": [
+              [-11.3296875, 17.0015625],
+              [-9.160546875, 20.281640625]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.005-f16",
+        "path": "/embeddings/mnist/data-2.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-7.611328125, 26.208984375],
+              [-5.2958984375, 25.6064453125]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [-6.400976562499999, 23.3716796875],
+              [-8.943359375, 22.205078125]
+            ]
+          },
+          {
+            "name": "final",
+            "bounds": [
+              [-11.2015625, 16.9984375],
+              [-9.064453125, 20.255859375]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "bw0.001-f16",
+        "path": "/embeddings/mnist/data-3.np",
+        "fpFormat": "standard",
+        "deltaEncoded": false,
+        "channels": [
+          {
+            "name": "fc1",
+            "bounds": [
+              [-1.1441894531249996, 19.927880859375],
+              [-6.308203125, 17.405859375]
+            ]
+          },
+          {
+            "name": "fc1-relu",
+            "bounds": [
+              [1.9751953125000004, 25.0306640625],
+              [-5.720507812499999, 16.7302734375]
+            ]
+          },
+          {
+            "name": "final",
+            "bounds": [
+              [-4.6455078125, 11.6552734375],
+              [-3.9437499999999996, 13.75625]
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

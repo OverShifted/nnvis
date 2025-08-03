@@ -2,7 +2,7 @@ import Capture from '@/lib/capture'
 import { buildColormap } from '@/lib/colormaps'
 import GlobalController from '@/lib/global_controller'
 import { mixColors } from '@/lib/utils'
-import { Chip, Tooltip } from '@mui/joy'
+import { Chip, Theme, Tooltip } from '@mui/joy'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
@@ -13,17 +13,17 @@ interface ClassChipsProps {
 
 export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
   const [classMask, setClassMask] = useState([] as number[])
-  const labels = capture.labels || []
+  const classes = capture.classes || []
 
   useEffect(() => {
     GlobalController.setClassMask(classMask)
   }, [classMask])
 
   useEffect(() => {
-    setClassMask(new Array(labels.length).fill(1))
-  }, [capture, labels.length])
+    setClassMask(new Array(classes.length).fill(1))
+  }, [capture, classes.length])
 
-  return labels.map((label, index) => (
+  return classes.map((label, index) => (
     <Tooltip
       className="classChipTooltip"
       key={index}
@@ -42,21 +42,24 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
           />
         ) : null
       }
-      slotProps={{
-        root: {
-          sx: (theme) => ({
-            backgroundColor: 'black',
-            padding: 4,
-            filter: theme.palette.mode === 'dark' ? 'invert()' : '',
-            opacity: label.image ? 100 : 0,
-          }),
-        },
-        arrow: {
-          sx: {
-            '--joy-palette-background-surface': 'black',
+      // @ts-ignore
+      slotProps={
+        {
+          root: {
+            sx: (theme: Theme) => ({
+              backgroundColor: 'black',
+              padding: 4,
+              filter: theme.palette.mode === 'dark' ? 'invert()' : '',
+              opacity: label.image ? 100 : 0,
+            }),
           },
-        },
-      }}
+          arrow: {
+            sx: {
+              '--joy-palette-background-surface': 'black',
+            },
+          },
+        } satisfies unknown
+      }
       onOpen={() =>
         setClassMask(
           Array.from({ length: 10 }, (_, i) => (i === index ? 1 : 0)),

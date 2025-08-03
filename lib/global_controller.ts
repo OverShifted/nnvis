@@ -1,3 +1,4 @@
+import Capture from './capture'
 import Visualization from './visualization'
 
 class _GlobalController {
@@ -7,6 +8,8 @@ class _GlobalController {
   reactSetTime: ((time: number) => void) | null = null
 
   frameCount: number = 0
+  // TODO: Remove frameCount
+  capture: Capture | null = null
 
   isPlaying: boolean = true
   reactSetIsPlaying: ((isPlaying: boolean) => void) | null = null

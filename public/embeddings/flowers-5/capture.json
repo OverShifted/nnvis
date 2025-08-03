@@ -1,0 +1,108 @@
+{
+  "name": "Flowers 5",
+  "frameCount": 1192,
+  "variations": [
+    {
+      "name": "bw0.08-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -14.53984375,
+              24.09453125
+            ],
+            [
+              -11.62109375,
+              26.11328125
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.01-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -11.658593749999998,
+              20.900781249999998
+            ],
+            [
+              -11.986718749999998,
+              24.510156249999998
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.005-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -11.934375,
+              20.653125
+            ],
+            [
+              -11.982812499999998,
+              24.373437499999998
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.001-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -3.01484375,
+              12.63203125
+            ],
+            [
+              -13.3470703125,
+              3.9427734374999996
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "classes": [
+    [
+      "daisy",
+      "class-0.png"
+    ],
+    [
+      "dandelion",
+      "class-1.png"
+    ],
+    [
+      "rose",
+      "class-2.png"
+    ],
+    [
+      "sunflower",
+      "class-3.png"
+    ],
+    [
+      "tulip",
+      "class-4.png"
+    ]
+  ]
+}

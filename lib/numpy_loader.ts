@@ -117,7 +117,7 @@ const NumpyLoader = (function () {
       }
     })
 
-    if (variation.deltaEncoding) {
+    if (variation.deltaEncoded) {
       const frameLen = shape[1] * shape[2] // TODO
       const cumOut = new Float32Array(u8Buffer.length)
       cumOut.set(out.slice(0, frameLen), 0)

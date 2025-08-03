@@ -1,0 +1,96 @@
+{
+  "name": "Cat vs Dog",
+  "frameCount": 880,
+  "variations": [
+    {
+      "name": "bw0.08-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -19.748437499999998,
+              27.670312499999998
+            ],
+            [
+              -15.814843749999998,
+              28.932031249999998
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.01-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -11.764062499999998,
+              22.342187499999998
+            ],
+            [
+              -16.04453125,
+              27.52109375
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.005-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -8.76640625,
+              21.33671875
+            ],
+            [
+              -15.798437499999999,
+              27.5328125
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "bw0.001-f16",
+      "format": "float16",
+      "deltaEncoded": false,
+      "channels": [
+        {
+          "name": "final",
+          "bounds": [
+            [
+              -15.44140625,
+              22.76171875
+            ],
+            [
+              -19.41484375,
+              23.15703125
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "classes": [
+    [
+      "cat",
+      "class-0.png"
+    ],
+    [
+      "dog",
+      "class-1.png"
+    ]
+  ]
+}

@@ -63,12 +63,13 @@ export default function VisScatterBlock({
       vis.current?.setVariation(variations[variation])
     } else {
       setVariation(0)
+      setChannel(0)
+
       vis.current?.setVariation(variations[0])
+      vis.current?.setChannel(0)
+
       prevVariations.current = variations
     }
-
-    setChannel(0)
-    vis.current?.setChannel(0)
   }, [variations, variation])
 
   useEffect(() => {

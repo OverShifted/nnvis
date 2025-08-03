@@ -85,10 +85,11 @@ export default function Home() {
   }, [classMask])
 
   useEffect(() => {
-    const classCount = captures[captureIdx].labels?.length || 0
+    const classCount = captures[captureIdx].classes?.length || 0
     setClassMask(new Array(classCount).fill(1))
 
     GlobalController.frameCount = capture.frameCount
+    GlobalController.capture = capture
   }, [captureIdx, capture.frameCount])
 
   useEffect(() => {

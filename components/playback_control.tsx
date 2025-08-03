@@ -16,14 +16,23 @@ export default function PlaybackControl({ maxFrame }: PlaybackControlProps) {
   GlobalController.reactSetTime = setTime
   GlobalController.reactSetIsPlaying = setIsPlaying
 
+  const playPauseIconSx = {
+    width: '100%',
+    height: '100%',
+  }
+
   return (
     <div id="playback-control">
       <Button
         id="play-button"
         onClick={() => GlobalController.setIsPlaying(!isPlaying)}
       >
-        <span>
-          {isPlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
+        <span className="flex justify-center items-center">
+          {isPlaying ? (
+            <PauseRoundedIcon sx={playPauseIconSx} />
+          ) : (
+            <PlayArrowRoundedIcon sx={playPauseIconSx} />
+          )}
         </span>
       </Button>
       <div style={{ width: '100%', position: 'relative' }}>

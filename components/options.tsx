@@ -29,7 +29,7 @@ export default function Options({
 }: OptionsProps) {
   return (
     <Box className="w-full flex gap-4 px-5 pt-7 justify-center items-center">
-      <FormLabel>Capture</FormLabel>
+      <FormLabel>Figures</FormLabel>
       <Input
         type="number"
         value={Math.max(plotCount, 1)}
@@ -39,7 +39,8 @@ export default function Options({
       />
 
       <Divider orientation="vertical" />
-      <FormLabel>Figures</FormLabel>
+
+      <FormLabel>Capture</FormLabel>
       <Select
         value={captureIdx}
         onChange={(_e, idx: number | null) => {
