@@ -11,6 +11,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/joy'
+import { useRouter } from 'next/router'
 import { RefObject, useEffect, useId, useRef, useState } from 'react'
 
 interface VisScatterBlockProps {
@@ -88,14 +89,15 @@ export default function VisScatterBlock({
     return () => clearInterval(interval)
   }, [isLoading, loadPercentage])
 
+  const router = useRouter()
   useEffect(() => {
     if (prevVariations.current === variations) {
-      vis.current?.setVariation(variations[variation])
+      vis.current?.setVariation(variations[variation], router.basePath)
     } else {
       setVariation(0)
       setChannel(0)
 
-      vis.current?.setVariation(variations[0])
+      vis.current?.setVariation(variations[0], router.basePath)
       vis.current?.setChannel(0)
 
       prevVariations.current = variations

@@ -53,11 +53,12 @@ class _AssetManager {
   get(
     requesterId: string,
     variation: Variation,
+    basePath: string,
     onLongLoadRequired: () => void,
     onProgress: (percentage: number) => void,
   ): Promise<NDArray[]> {
     this.revokePendingRequests(requesterId)
-    const url = variation.path
+    const url = basePath + variation.path
 
     return new Promise((resolve, reject) => {
       if (this.assets.has(url)) {

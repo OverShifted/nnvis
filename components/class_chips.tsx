@@ -4,6 +4,7 @@ import GlobalController from '@/lib/global_controller'
 import { mixColors } from '@/lib/utils'
 import { Chip, Theme, Tooltip } from '@mui/joy'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 interface ClassChipsProps {
@@ -23,6 +24,8 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
     setClassMask(new Array(classes.length).fill(1))
   }, [capture, classes.length])
 
+  const router = useRouter()
+
   return classes.map((label, index) => (
     <Tooltip
       className="classChipTooltip"
@@ -37,7 +40,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
             }}
             width={120}
             height={120}
-            src={label.image}
+            src={router.basePath + label.image}
             alt=""
           />
         ) : null
@@ -103,7 +106,7 @@ export default function ClassChips({ capture, colorMap }: ClassChipsProps) {
               }}
               width={0}
               height={0}
-              src={label.image}
+              src={router.basePath + label.image}
               alt=""
             />
           ) : null}

@@ -63,13 +63,14 @@ export default class Visualization {
     this.draw()
   }
 
-  setVariation(variation: Variation) {
+  setVariation(variation: Variation, basePath: string) {
     this.renderer?.clear()
     this.renderer = null
 
     AssetManager.get(
       this.id,
       variation,
+      basePath,
       () => {
         this.reactSetIsLoading(true)
       },
