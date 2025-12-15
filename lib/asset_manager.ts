@@ -1,27 +1,27 @@
 import { NumpyLoader, NDArray } from './numpy_loader'
 import Variation from './variation'
 
-type Wish = {
+interface Wish {
   makerId: string
   resolve: (_value: NDArray[] | PromiseLike<NDArray[]>) => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reject: (_reason?: any) => void
-  onProgress: (_percentage: number) => void
+  onProgress: (_e: ProgressEvent<XMLHttpRequestEventTarget>) => void
 }
 
 class Pending {
   xhr: XMLHttpRequest
   wishlist: Wish[]
-  progress: number = 0
+  progress: ProgressEvent<XMLHttpRequestEventTarget> | null = null
 
   constructor(xhr: XMLHttpRequest, wishlist: Wish[]) {
     this.xhr = xhr
     this.wishlist = wishlist
   }
 
-  onProgress(progress: number) {
-    this.progress = progress
-    this.wishlist.forEach((w) => w.onProgress(progress))
+  onProgress(e: ProgressEvent<XMLHttpRequestEventTarget>) {
+    this.progress = e
+    this.wishlist.forEach((w) => w.onProgress(e))
   }
 
   onResolve(value: NDArray[] | PromiseLike<NDArray[]>) {
@@ -35,7 +35,7 @@ class Pending {
 
   addWish(wish: Wish) {
     this.wishlist.push(wish)
-    wish.onProgress(this.progress)
+    if (this.progress) wish.onProgress(this.progress)
   }
 }
 
@@ -55,7 +55,7 @@ class _AssetManager {
     variation: Variation,
     basePath: string,
     onLongLoadRequired: () => void,
-    onProgress: (_percentage: number) => void,
+    onProgress: (_e: ProgressEvent<XMLHttpRequestEventTarget>) => void,
   ): Promise<NDArray[]> {
     this.revokePendingRequests(requesterId)
     const url = basePath + variation.path
@@ -106,8 +106,14 @@ class _AssetManager {
         console.log(
           `Loaded ${percentage.toFixed(1)}% of ${url} (${e.loaded}/${e.total})`,
         )
-        pending.onProgress(percentage)
+        pending.onProgress(e)
       })
+
+      pending.onProgress({
+        lengthComputable: true,
+        loaded: 0,
+        total: 1,
+      } as ProgressEvent<XMLHttpRequestEventTarget>)
 
       xhr.open('GET', url, true)
       xhr.responseType = 'arraybuffer'

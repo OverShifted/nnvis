@@ -25,7 +25,7 @@ import {
 import { useRouter } from 'next/router'
 import { RefObject, useEffect, useId, useRef, useState } from 'react'
 import PlayPauseIcon from './play_pause_icon'
-import Image from 'next/image'
+import ImageWithSpinner from './image_with_spinner'
 
 function VariationOption({
   variation,
@@ -126,8 +126,10 @@ export default function VisScatterBlock({
   const [channel, setChannel] = useState(0)
   // const [colorMap, setColorMap] = useState(colorMaps[0])
   const [isLoading, setIsLoading] = useState(true)
-  const [loadPercentage, setLoadPercentage] = useState(0)
-  const [mouseCollision, setMouseCollision] = useState<MouseCollision | null>(null)
+  const [loadIndicator, setLoadIndicator] = useState({ txt: '', percentage: 0 })
+  const [mouseCollision, setMouseCollision] = useState<MouseCollision | null>(
+    null,
+  )
 
   const [renderStyle, setRenderStyle] = useState('dots')
   const [tailFalloff, setTailFalloff] = useState(10)
@@ -144,7 +146,7 @@ export default function VisScatterBlock({
       canvas.current as HTMLCanvasElement,
       controller,
       setIsLoading,
-      setLoadPercentage,
+      setLoadIndicator,
       setMouseCollision,
       {
         channel,
@@ -329,7 +331,7 @@ export default function VisScatterBlock({
             key={mouseCollision.sampleIdx}
             sx={{ pointerEvents: 'none' }}
             title={
-              <Image
+              <ImageWithSpinner
                 loading="eager"
                 style={{
                   imageRendering: 'pixelated',
@@ -340,13 +342,13 @@ export default function VisScatterBlock({
                   router.basePath +
                   `${controller.capture?.path.replace('public', '')}/anim_x/${mouseCollision.sampleIdx}.png`
                 }
-                alt={`Preview of ${mouseCollision.sampleIdx} ${mouseCollision.mouseX}`}
+                alt={`Preview of ${mouseCollision.sampleIdx}`}
               />
             }
             open={true}
             variant="outlined"
             arrow
-            placement='top'
+            placement="top"
           >
             <div
               className="absolute select-none"
@@ -368,15 +370,22 @@ export default function VisScatterBlock({
         {isLoading && (
           <div
             className="absolute"
-            style={{ top: 'calc(50% - 32px)', left: 'calc(50% - 32px)' }}
+            style={{
+              top: 'calc(50% - 32px)',
+              left: 'calc(50% - 32px)',
+              scale: 2,
+            }}
           >
             <CircularProgress
-              value={isNaN(loadPercentage) ? undefined : loadPercentage}
+              value={
+                loadIndicator.percentage >= 0
+                  ? loadIndicator.percentage
+                  : undefined
+              }
               size="lg"
+              thickness={3}
             >
-              <Typography>
-                {isNaN(loadPercentage) ? '' : `${Math.trunc(loadPercentage)}%`}
-              </Typography>
+              <Typography fontSize={8}>{loadIndicator.txt}</Typography>
             </CircularProgress>
           </div>
         )}

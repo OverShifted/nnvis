@@ -2,7 +2,7 @@ import AssetManager from './asset_manager'
 import { Controller } from './controller'
 import { NDArray } from './numpy_loader'
 import Renderer from './renderer'
-import { lerpSample, remap } from './utils'
+import { distanceSquared, lerpSample, readablizeBytes, remap } from './utils'
 import Variation from './variation'
 
 interface MouseCollision {
@@ -24,7 +24,13 @@ class Visualization {
   controller: Controller
 
   reactSetIsLoading: (_isLoading: boolean) => void
-  reactSetLoadPercentage: (_percentage: number) => void
+  reactSetLoadIndicator: ({
+    txt,
+    percentage,
+  }: {
+    txt: string
+    percentage: number
+  }) => void
   reactSetMouseCollision: (_collision: MouseCollision | null) => void
 
   channel: number
@@ -40,15 +46,20 @@ class Visualization {
   hoveredSampleIdx: number | null = null
 
   mouseMoveListener: (_e: MouseEvent) => void
-  mouseX: number = -1
-  mouseY: number = -1
+  mouseLeaveListener: (_e: MouseEvent) => void
 
   constructor(
     id: string,
     canvas: HTMLCanvasElement,
     controller: Controller,
     reactSetIsLoading: (_isLoading: boolean) => void,
-    reactSetLoadPercentage: (_percentage: number) => void,
+    reactSetLoadIndicator: ({
+      txt,
+      percentage,
+    }: {
+      txt: string
+      percentage: number
+    }) => void,
     reactSetMouseCollision: (_collision: MouseCollision | null) => void,
     options: {
       channel: number
@@ -65,7 +76,7 @@ class Visualization {
     this.controller = controller
 
     this.reactSetIsLoading = reactSetIsLoading
-    this.reactSetLoadPercentage = reactSetLoadPercentage
+    this.reactSetLoadIndicator = reactSetLoadIndicator
     this.reactSetMouseCollision = reactSetMouseCollision
 
     this.channel = options.channel
@@ -84,39 +95,49 @@ class Visualization {
       const x = event.clientX - rect.left
       const y = event.clientY - rect.top
 
-      this.mouseX = x
-      this.mouseY = y
-
-      const collision = this.getHoveredSample()
+      const collision = this.getHoveredSample(x, y)
       this.hoveredSampleIdx = collision?.sampleIdx ?? null
-      reactSetMouseCollision(collision)
-      // reactSetMouseCollision({
-      //   sampleIdx: collision?.sampleIdx ?? -1,
-      //   mouseX: x,
-      //   mouseY: y,
-
-      //   sampleX: x,
-      //   sampleY: y,
-      // })
-
       this.draw()
+
+      reactSetMouseCollision(collision)
+    }
+
+    this.mouseLeaveListener = (_) => {
+      this.hoveredSampleIdx = null
+      this.draw()
+
+      reactSetMouseCollision(null)
     }
 
     this.canvas.addEventListener(
-      Visualization._pointerEventType(),
+      Visualization._pointerMove,
       this.mouseMoveListener,
+    )
+
+    this.canvas.addEventListener(
+      Visualization._pointerLeave,
+      this.mouseLeaveListener,
     )
   }
 
   shutdown() {
     this.canvas.removeEventListener(
-      Visualization._pointerEventType(),
+      Visualization._pointerMove,
       this.mouseMoveListener,
+    )
+
+    this.canvas.removeEventListener(
+      Visualization._pointerLeave,
+      this.mouseLeaveListener,
     )
   }
 
-  static _pointerEventType() {
+  static get _pointerMove() {
     return window.PointerEvent ? 'pointermove' : 'mousemove'
+  }
+
+  static get _pointerLeave() {
+    return window.PointerEvent ? 'pointerleave' : 'mouseleave'
   }
 
   _setArray(array: NDArray[], variation: Variation) {
@@ -136,8 +157,15 @@ class Visualization {
       () => {
         this.reactSetIsLoading(true)
       },
-      (percentage) => {
-        this.reactSetLoadPercentage(percentage)
+      (e) => {
+        const percentage = e.lengthComputable ? (e.loaded * 100) / e.total : -1
+        this.reactSetLoadIndicator({
+          txt:
+            percentage >= 0
+              ? `${percentage.toFixed(0)}%`
+              : readablizeBytes(e.loaded),
+          percentage,
+        })
       },
     )
       .then((ndArrays) => {
@@ -206,24 +234,20 @@ class Visualization {
     )
   }
 
-  _distance2WithMouse(x: number, y: number) {
-    return Math.pow(x - this.mouseX, 2) + Math.pow(y - this.mouseY, 2)
-  }
-
-  getHoveredSample(): MouseCollision | null {
+  getHoveredSample(mouseX: number, mouseY: number): MouseCollision | null {
     const array = this.renderer?.array[this.channel]
     if (!array || !this.variation) return null
 
     const [xBounds, yBounds] = this.variation.channels[this.channel].bounds
     const radius2 = Math.pow(this.radius, 2)
-    let closest = {
-      dist2: Infinity,
+    const closest = {
+      distance2: Infinity,
       sampleIdx: 0,
       sampleX: 0,
       sampleY: 0,
 
-      mouseX: this.mouseX,
-      mouseY: this.mouseY,
+      mouseX: mouseX,
+      mouseY: mouseY,
     }
 
     for (let i = array.shape[1] - 1; i >= 0; i--) {
@@ -238,7 +262,7 @@ class Visualization {
         [0, this.canvas.getBoundingClientRect().height],
       )
 
-      const distance2 = this._distance2WithMouse(x, y)
+      const distance2 = distanceSquared(x, y, mouseX, mouseY)
 
       if (distance2 <= radius2)
         return {
@@ -246,12 +270,12 @@ class Visualization {
           sampleX: x,
           sampleY: y,
 
-          mouseX: this.mouseX,
-          mouseY: this.mouseY,
+          mouseX: mouseX,
+          mouseY: mouseY,
         }
 
-      if (distance2 < closest.dist2) {
-        closest.dist2 = distance2
+      if (distance2 < closest.distance2) {
+        closest.distance2 = distance2
 
         closest.sampleIdx = i
         closest.sampleX = x
@@ -259,8 +283,7 @@ class Visualization {
       }
     }
 
-    if (closest.dist2 < radius2 * Math.pow(7, 2))
-      return closest
+    if (closest.distance2 < radius2 * Math.pow(7, 2)) return closest
 
     return null
   }
