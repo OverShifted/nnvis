@@ -3,36 +3,24 @@
 
 import Variation from './variation'
 
+type NDArrayData =
+  | Uint8Array
+  | Int8Array
+  | Uint16Array
+  | Int16Array
+  | Uint32Array
+  | Int32Array
+  | BigInt64Array
+  | Float16Array
+  | Float32Array
+  | Float64Array
+
 class NDArray {
   shape: number[]
   fortran_order: boolean
-  data:
-    | Uint8Array
-    | Int8Array
-    | Uint16Array
-    | Int16Array
-    | Uint32Array
-    | Int32Array
-    | BigInt64Array
-    | Float16Array
-    | Float32Array
-    | Float64Array
+  data: NDArrayData
 
-  constructor(
-    shape: number[],
-    fortran_order: boolean,
-    data:
-      | Uint8Array
-      | Int8Array
-      | Uint16Array
-      | Int16Array
-      | Uint32Array
-      | Int32Array
-      | BigInt64Array
-      | Float16Array
-      | Float32Array
-      | Float64Array,
-  ) {
+  constructor(shape: number[], fortran_order: boolean, data: NDArrayData) {
     this.shape = shape
     this.fortran_order = fortran_order
     this.data = data
@@ -85,19 +73,19 @@ function f8ToNumber(u8: number, eBits: number = 3): number {
   }
 }
 
-const NumpyLoader = (function () {
-  function asciiDecode(buf: ArrayBuffer) {
+class NumpyLoader {
+  static _asciiDecode(buf: ArrayBuffer) {
     return String.fromCharCode.apply(null, Array.from(new Uint8Array(buf)))
   }
 
-  function readUint16LE(buffer: ArrayBuffer) {
+  static _readUint16LE(buffer: ArrayBuffer) {
     const view = new DataView(buffer)
     let val = view.getUint8(0)
     val |= view.getUint8(1) << 8
     return val
   }
 
-  function readF8Array(
+  static _readF8Array(
     buffer: ArrayBuffer,
     offsetBytes: number,
     len: number,
@@ -138,21 +126,21 @@ const NumpyLoader = (function () {
     return out
   }
 
-  function fromArrayBuffer(buf: ArrayBuffer, variation: Variation): NDArray[] {
+  static fromArrayBuffer(buf: ArrayBuffer, variation: Variation): NDArray[] {
     let current = 0
     const out = []
 
     while (current < buf.byteLength) {
       // Check the magic number
-      const magic = asciiDecode(buf.slice(current, current + 6))
+      const magic = this._asciiDecode(buf.slice(current, current + 6))
       if (magic.slice(1, 6) != 'NUMPY') {
         throw new Error('unknown file type')
       }
 
       /* eslint @typescript-eslint/no-unused-vars: 0 */
       const _version = new Uint8Array(buf.slice(current + 6, current + 8)),
-        headerLength = readUint16LE(buf.slice(current + 8, current + 10)),
-        headerStr = asciiDecode(
+        headerLength = this._readUint16LE(buf.slice(current + 8, current + 10)),
+        headerStr = this._asciiDecode(
           buf.slice(current + 10, current + 10 + headerLength),
         )
       const offsetBytes = current + 10 + headerLength
@@ -188,7 +176,7 @@ const NumpyLoader = (function () {
       else if (info.descr === '<f8')
         data = new Float64Array(buf, offsetBytes, len)
       else if (info.descr === '<v1')
-        data = readF8Array(buf, offsetBytes, len, info.shape, variation)
+        data = this._readF8Array(buf, offsetBytes, len, info.shape, variation)
       else throw new Error('unknown numeric dtype ' + info.descr)
 
       // current = offsetBytes + len * data.BYTES_PER_ELEMENT
@@ -198,10 +186,6 @@ const NumpyLoader = (function () {
 
     return out
   }
-
-  return {
-    fromArrayBuffer: fromArrayBuffer,
-  }
-})()
+}
 
 export { NumpyLoader, NDArray }
