@@ -29,7 +29,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      NEXT_BASE_PATH: "/${{ github.event.repository.name }}"
+      # Use this to publish the site to a subpath of a domain, e.g. https://<username>.github.io/<repository-name>/
+      # NEXT_BASE_PATH: "/${{ github.event.repository.name }}"
+
+      NEXT_BASE_PATH: ""
     steps:
       - name: Checkout
         uses: actions/checkout@v4
